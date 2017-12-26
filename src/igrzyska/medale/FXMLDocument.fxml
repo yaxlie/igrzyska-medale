@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="495.0" prefWidth="405.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLDocumentController">
+  <children>
+    <Button fx:id="button" layoutX="338.0" layoutY="8.0" onAction="#handleButtonAction" text="Edytuj" />
+    <Pane layoutX="13.0" layoutY="8.0" prefHeight="405.0" prefWidth="189.0">
+      <children>
+        <ListView id="listCountries" fx:id="countries" layoutX="0.0" layoutY="32.0" prefHeight="373.0" prefWidth="189.0" />
+        <ChoiceBox layoutX="58.0" layoutY="4.0">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ChoiceBox>
+      </children>
+    </Pane>
+    <Pane layoutX="203.0" layoutY="47.0" prefHeight="96.0" prefWidth="189.0">
+      <children>
+        <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false" />
+        <Label fx:id="imie" layoutX="79.0" layoutY="9.0" text="Jan" />
+        <Label fx:id="nazwisko" layoutX="79.0" layoutY="25.0" text="Kowalski" />
+        <Label fx:id="data" layoutX="79.0" layoutY="41.0" text="22 lata" />
+        <Label fx:id="rating" layoutX="79.0" layoutY="57.0" text="4.0" />
+        <Label fx:id="kraj" layoutX="79.0" layoutY="73.0" text="Polska" />
+      </children>
+    </Pane>
+    <Pane layoutX="205.0" layoutY="143.0" prefHeight="270.0" prefWidth="200.0">
+      <children>
+        <Label layoutX="63.0" layoutY="6.0" text="Reprezentacja" />
+        <ListView fx:id="osoby" layoutX="12.0" layoutY="35.0" prefHeight="235.0" prefWidth="176.99997792968497" />
+      </children>
+    </Pane>
+    <Button layoutX="158.0" layoutY="452.0" mnemonicParsing="false" text="Dodaj Medal" />
+  </children>
+</AnchorPane>
