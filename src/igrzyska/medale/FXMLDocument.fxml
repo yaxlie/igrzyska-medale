@@ -8,13 +8,12 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="495.0" prefWidth="405.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLDocumentController">
+<AnchorPane id="AnchorPane" minWidth="402.0" prefHeight="552.9998779296875" prefWidth="422.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLDocumentController">
   <children>
-    <Button fx:id="button" layoutX="338.0" layoutY="8.0" onAction="#handleButtonAction" text="Edytuj" />
-    <Pane layoutX="13.0" layoutY="8.0" prefHeight="405.0" prefWidth="189.0">
+    <Pane layoutX="13.0" layoutY="8.0" prefHeight="435.0" prefWidth="295.0">
       <children>
-        <ListView id="listCountries" fx:id="countries" layoutX="0.0" layoutY="32.0" prefHeight="373.0" prefWidth="189.0" />
-        <ChoiceBox layoutX="58.0" layoutY="4.0">
+        <ListView id="listCountries" fx:id="countries" layoutX="0.0" layoutY="55.0" prefHeight="373.0" prefWidth="111.0" />
+        <ChoiceBox fx:id="cbDyscyplina" layoutX="58.0" layoutY="4.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -23,9 +22,15 @@
             </FXCollections>
           </items>
         </ChoiceBox>
+        <ListView id="listCountries" fx:id="goldList" disable="true" focusTraversable="false" layoutX="111.0" layoutY="55.0" opacity="1.0" prefHeight="373.0" prefWidth="20.0" />
+        <ListView id="listCountries" fx:id="silverList" disable="true" focusTraversable="false" layoutX="131.0" layoutY="55.0" opacity="1.0" prefHeight="373.0" prefWidth="20.0" />
+        <ListView id="listCountries" fx:id="bronzeList" disable="true" focusTraversable="false" layoutX="151.0" layoutY="55.0" opacity="1.0" prefHeight="373.0" prefWidth="20.0" />
+        <ImageView fx:id="iGold" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="111.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
+        <ImageView fx:id="iSilver" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="131.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
+        <ImageView fx:id="iBronze" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="151.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
       </children>
     </Pane>
-    <Pane layoutX="203.0" layoutY="47.0" prefHeight="96.0" prefWidth="189.0">
+    <Pane layoutX="211.0" layoutY="38.0" prefHeight="110.0" prefWidth="189.0">
       <children>
         <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="false" />
         <Label fx:id="imie" layoutX="79.0" layoutY="9.0" text="Jan" />
@@ -33,14 +38,17 @@
         <Label fx:id="data" layoutX="79.0" layoutY="41.0" text="22 lata" />
         <Label fx:id="rating" layoutX="79.0" layoutY="57.0" text="4.0" />
         <Label fx:id="kraj" layoutX="79.0" layoutY="73.0" text="Polska" />
+        <Label layoutX="79.0" layoutY="91.0" text="Trener" />
       </children>
     </Pane>
-    <Pane layoutX="205.0" layoutY="143.0" prefHeight="270.0" prefWidth="200.0">
+    <Pane layoutX="212.0" layoutY="161.0" prefHeight="270.0" prefWidth="200.0">
       <children>
         <Label layoutX="63.0" layoutY="6.0" text="Reprezentacja" />
         <ListView fx:id="osoby" layoutX="12.0" layoutY="35.0" prefHeight="235.0" prefWidth="176.99997792968497" />
       </children>
     </Pane>
-    <Button layoutX="158.0" layoutY="452.0" mnemonicParsing="false" text="Dodaj Medal" />
+    <Button fx:id="dMedalButton" layoutX="161.0" layoutY="518.0" mnemonicParsing="false" text="Dodaj Medal" />
+    <Button fx:id="buttonNZawodnik" layoutX="259.0" layoutY="440.0" mnemonicParsing="false" text="dodaj Zawodnika" />
+    <Button fx:id="buttonNKraj" layoutX="70.0" layoutY="451.0" mnemonicParsing="false" text="dodaj Kraj" />
   </children>
 </AnchorPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="229.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLMedalController">
+  <children>
+    <TextField layoutX="14.0" layoutY="22.0" prefWidth="200.0" promptText="Imię" />
+    <TextField layoutX="14.0" layoutY="51.0" prefWidth="200.0" promptText="Nazwisko" />
+    <SplitMenuButton layoutX="14.0" layoutY="83.0" mnemonicParsing="false" text="Data">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Action 1" />
+        <MenuItem mnemonicParsing="false" text="Action 2" />
+      </items>
+    </SplitMenuButton>
+    <Button layoutX="66.0" layoutY="125.0" mnemonicParsing="false" text="Złoty" />
+    <Button layoutX="132.0" layoutY="126.0" mnemonicParsing="false" text="Srebrny" />
+    <Button layoutX="207.0" layoutY="126.0" mnemonicParsing="false" text="Brązowy" />
+    <Button layoutX="144.0" layoutY="180.0" mnemonicParsing="false" text="OK" />
+  </children>
+</AnchorPane>

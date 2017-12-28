@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="348.0" prefWidth="255.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLNowyZawodnikController">
+  <children>
+    <Button fx:id="bDodaj" layoutX="86.0" layoutY="306.0" mnemonicParsing="false" text="Button" />
+    <TextField fx:id="tImie" layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="imię" />
+    <TextField fx:id="tNazwisko" layoutX="14.0" layoutY="42.0" prefWidth="200.0" promptText="nazwisko" />
+    <TextField layoutX="14.0" layoutY="71.0" prefWidth="200.0" promptText="data urodzenia" />
+    <TextField layoutX="14.0" layoutY="101.0" prefWidth="200.0" promptText="id trenera" />
+    <TextField layoutX="14.0" layoutY="131.0" prefWidth="200.0" promptText="id zesp" />
+    <TextField layoutX="14.0" layoutY="161.0" prefWidth="200.0" promptText="ocena" />
+    <TextField layoutX="14.0" layoutY="191.0" prefWidth="200.0" promptText="kraj" />
+    <TextField layoutX="14.0" layoutY="223.0" prefWidth="200.0" promptText="dyscyplina" />
+  </children>
+</AnchorPane>

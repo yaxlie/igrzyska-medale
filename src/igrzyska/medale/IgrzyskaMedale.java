@@ -33,6 +33,7 @@ public class IgrzyskaMedale extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.setTitle("Tokio 2020");
         stage.show();   
         
     }

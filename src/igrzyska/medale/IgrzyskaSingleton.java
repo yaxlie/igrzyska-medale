@@ -24,9 +24,17 @@ public class IgrzyskaSingleton {
    private static IgrzyskaSingleton instance = null;
    private Connection connection;
    private Properties connectionProps;
+   private static String adm = "inf127301.";
+   
+   private SelectedStuff selectedStuff;
+   private ArrayList<String> krajList;
+   
+   private FXMLDocumentController mainWindow;
    
    protected IgrzyskaSingleton() {
         connection = null;
+        selectedStuff = new SelectedStuff();
+        krajList = new ArrayList<>();
         connectionProps = new Properties();
         connectionProps.put("user", "inf127301");
         connectionProps.put("password", "inf127301");
@@ -55,7 +63,7 @@ public class IgrzyskaSingleton {
         try {
             stmt = connection.createStatement();
             rs = stmt.executeQuery("select nazwa " +
-            "from kraj");
+            "from " + adm + "kraj");
             while (rs.next()) {
                 String nazwa = rs.getString(1);
                 countries.add(nazwa);
@@ -74,7 +82,37 @@ public class IgrzyskaSingleton {
                 } catch (SQLException e) { /* kod obsługi */ }
             }
         }
+        krajList = countries;
         return countries;
+   }
+   
+      public ArrayList<String> getDyscypliny(){
+        ArrayList<String> dyscypliny = new ArrayList<>();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select nazwa " +
+            "from " + adm + "dyscyplina");
+            while (rs.next()) {
+                String nazwa = rs.getString(1);
+                dyscypliny.add(nazwa);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return dyscypliny;
    }
    
    private TableArray getOsoby(String type, String country, String dyscyplina){
@@ -83,7 +121,7 @@ public class IgrzyskaSingleton {
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_zaw, imię, nazwisko from " + type + " where kraj like '" 
+            rs = stmt.executeQuery("select id_zaw, imię, nazwisko from " + adm + type + " where kraj like '" 
                 +country+"' and dyscyplina like '"+dyscyplina+"'");
             while (rs.next()) {
                 String nazwa = rs.getString(2) + " " + rs.getString(3);
@@ -119,6 +157,10 @@ public class IgrzyskaSingleton {
    public TableArray getTrenerzy(String country){
        return getOsoby("trener", country, "%");
    }
+
+    public SelectedStuff getSelectedStuff() {
+        return selectedStuff;
+    }
    
    public Zawodnik getZawodnik(int id){
         Zawodnik zawodnik = null;
@@ -126,7 +168,7 @@ public class IgrzyskaSingleton {
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_zaw, imię, nazwisko, ocena, kraj, data_ur from zawodnik where id_zaw = " + id);
+            rs = stmt.executeQuery("select id_zaw, imię, nazwisko, ocena, kraj, data_ur from " + adm + "zawodnik where id_zaw = " + id);
             while (rs.next()) {
                 zawodnik = new Zawodnik(
                         rs.getInt(1),
@@ -152,4 +194,74 @@ public class IgrzyskaSingleton {
         }
         return zawodnik;
    }
+   
+   public void dodajZawodnika(String imie, String nazwisko, String zespol, String ocena, String idTrenera, 
+           String dyscyplina, String kraj, String data){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            int changes;
+            String val = "(null, " + modText(imie) + ", " + modText(nazwisko) + ", " + modText(zespol) + ", " 
+                    + modText(ocena) + ", " + modText(idTrenera) + 
+                    ", " + modText(dyscyplina) + ", " + modText(kraj) + ", " + modText(data) + ")" ;
+            changes = stmt.executeUpdate("INSERT INTO zawodnik VALUES" + val);
+            System.out.println("Wstawiono " + changes + " krotek."); 
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
+   private String modText(String s){
+       return (s == null || "".equals(s))? "'%'" : "'"+s+"'";
+   }
+
+    public FXMLDocumentController getMainWindow() {
+        return mainWindow;
+    }
+
+    public void setMainWindow(FXMLDocumentController mainWindow) {
+        this.mainWindow = mainWindow;
+    }
+
+    public ArrayList<String> getKrajList() {
+        return krajList;
+    }
+
+    public int countMedale(String kraj, String dyscyplina, String kolor) {
+        int c = 0;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select count (*) from " + adm + "medal where"
+                    + "(select kraj from " + adm + "zawodnik where id_zaw = ZAWODNIK_ID_ZAW) like " + modText(kraj) +
+                    " and DYSCYPLINA like " + modText(dyscyplina) +
+                    " and KOLOR like " + modText(kolor));
+            while (rs.next()) {
+                c = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return c;
+   }
+   
+   
 }
