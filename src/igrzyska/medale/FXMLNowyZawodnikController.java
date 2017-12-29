@@ -7,17 +7,24 @@ package igrzyska.medale;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.controlsfx.control.textfield.TextFields;
 
 /**
  * FXML Controller class
@@ -32,21 +39,40 @@ public class FXMLNowyZawodnikController implements Initializable {
     private TextField tImie;
     @FXML
     private TextField tNazwisko;
-    private IgrzyskaSingleton igrzyskaSingleton;
+    @FXML
+    private TextField tKraj;
+    @FXML
+    private TextField tDyscyplina;
+    @FXML
+    private TextField tTrener;
+    @FXML
+    private Slider slider;
+    @FXML
+    private Label ocena;
+    @FXML
+    private CheckBox zespol;
+    
+    private IgrzyskaSingleton igrzyska;
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        igrzyskaSingleton = IgrzyskaSingleton.getInstance();
+        igrzyska = IgrzyskaSingleton.getInstance();
+        tKraj.setText(igrzyska.getSelectedStuff().getKraj());
+        tDyscyplina.setText(igrzyska.getSelectedStuff().getDyscyplina());
         bDodaj.setOnAction((event) -> {
-            igrzyskaSingleton.dodajZawodnika(tImie.getText(), tNazwisko.getText(), null, null, null, 
-                    igrzyskaSingleton.getSelectedStuff().getDyscyplina(), 
-                    igrzyskaSingleton.getSelectedStuff().getKraj(), null);
-            igrzyskaSingleton.getMainWindow().refreshView();
+            igrzyska.dodajZawodnikaProcedure(tImie.getText(), tNazwisko.getText(), null, 0, tKraj.getText(),
+                    tDyscyplina.getText(), zespol.isSelected()?tKraj.getText():null, Float.parseFloat(ocena.getText()));
+            igrzyska.getMainWindow().refreshView();
             Stage stage = (Stage) bDodaj.getScene().getWindow();
             stage.close();
         }); 
+        
+        TextFields.bindAutoCompletion(tTrener, igrzyska.getOsoby("trener"));
+        TextFields.bindAutoCompletion(tDyscyplina, igrzyska.getDyscypliny());
+        TextFields.bindAutoCompletion(tKraj, igrzyska.getKrajList());
+        
     }    
     
 }

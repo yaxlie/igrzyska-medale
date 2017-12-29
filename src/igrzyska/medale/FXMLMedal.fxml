@@ -16,41 +16,9 @@
       </items>
     </SplitMenuButton>
     <Button layoutX="144.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#handleOkButton" text="OK" />
-    <ComboBox fx:id="cbDysc" editable="true" layoutX="14.0" layoutY="25.0" prefWidth="316.0" promptText="dyscyplina">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
-    <ComboBox fx:id="cbZloto" editable="true" layoutX="14.0" layoutY="103.0" prefWidth="316.0" promptText="Złoto">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
-    <ComboBox fx:id="cbSrebro" editable="true" layoutX="14.0" layoutY="134.0" prefWidth="316.0" promptText="Srebro">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
-    <ComboBox fx:id="cbBraz" editable="true" layoutX="14.0" layoutY="168.0" prefWidth="316.0" promptText="Brąz">
-      <items>
-        <FXCollections fx:factory="observableArrayList">
-          <String fx:value="Item 1" />
-          <String fx:value="Item 2" />
-          <String fx:value="Item 3" />
-        </FXCollections>
-      </items>
-    </ComboBox>
+    <TextField id="cb" fx:id="cbDysc" layoutX="14.0" layoutY="31.0" prefWidth="316.0" promptText="dyscyplina" />
+    <TextField id="c" fx:id="cbZloto" layoutX="14.0" layoutY="101.0" prefWidth="316.0" promptText="złoto" />
+    <TextField fx:id="cbSrebro" layoutX="14.0" layoutY="133.0" prefWidth="316.0" promptText="srebro" />
+    <TextField fx:id="cbBraz" layoutX="14.0" layoutY="164.0" prefWidth="316.0" promptText="brąz" />
   </children>
 </AnchorPane>

@@ -183,6 +183,7 @@ public class FXMLDocumentController implements Initializable {
             }
         }); 
         setMedaleList();
+        refreshView();
     }  
     
     public void refreshView(){

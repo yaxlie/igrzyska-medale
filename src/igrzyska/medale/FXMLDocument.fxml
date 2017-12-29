@@ -13,7 +13,7 @@
     <Pane layoutX="13.0" layoutY="8.0" prefHeight="435.0" prefWidth="295.0">
       <children>
         <ListView id="listCountries" fx:id="countries" layoutX="0.0" layoutY="55.0" prefHeight="373.0" prefWidth="111.0" />
-        <ChoiceBox fx:id="cbDyscyplina" layoutX="58.0" layoutY="4.0">
+        <ChoiceBox fx:id="cbDyscyplina" layoutX="125.0" layoutY="6.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -28,6 +28,7 @@
         <ImageView fx:id="iGold" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="111.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
         <ImageView fx:id="iSilver" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="131.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
         <ImageView fx:id="iBronze" fitHeight="21.0" fitWidth="20.000015258789062" layoutX="151.0" layoutY="34.0" pickOnBounds="true" preserveRatio="false" />
+        <Label layoutX="48.0" layoutY="9.0" text="Dyscyplina :" />
       </children>
     </Pane>
     <Pane layoutX="211.0" layoutY="38.0" prefHeight="110.0" prefWidth="189.0">
