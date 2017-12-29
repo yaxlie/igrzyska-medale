@@ -113,7 +113,7 @@ public class FXMLDocumentController implements Initializable {
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 //                String dysc = dyscyplina.getValue().toString();
                 igrzyska.getSelectedStuff().setKraj(newValue);
-                osobyTable = igrzyska.getZawodnicy(newValue);
+                osobyTable = igrzyska.getZawodnicy(newValue, igrzyska.getSelectedStuff().getDyscyplina());
                 ObservableList<String> i = FXCollections.observableArrayList(osobyTable.getArray());
                 osoby.setItems(i);
             }
@@ -208,4 +208,5 @@ public class FXMLDocumentController implements Initializable {
         }
         return FXCollections.observableArrayList(list);
     }
+    
 }

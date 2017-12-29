@@ -6,6 +6,7 @@
 package igrzyska.medale;
 
 import igrzyska.medale.structures.Zawodnik;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -88,6 +89,7 @@ public class IgrzyskaSingleton {
    
       public ArrayList<String> getDyscypliny(){
         ArrayList<String> dyscypliny = new ArrayList<>();
+        dyscypliny.add("");
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -114,6 +116,67 @@ public class IgrzyskaSingleton {
         }
         return dyscypliny;
    }
+      
+    public ArrayList<String> getDyscypliny(String name){
+        ArrayList<String> dysc = new ArrayList<>();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select nazwa " +
+            "from " + adm + "dyscyplina WHERE ROWNUM <= 3 and UPPER(nazwa) like UPPER('%" + name + "%')");
+            while (rs.next()) {
+                String nazwa = rs.getString(1);
+                dysc.add(nazwa);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return dysc;
+   }
+    
+    public ArrayList<String> getZawodnik(String name, String column){
+        ArrayList<String> dysc = new ArrayList<>();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select * " +
+            "from " + adm + "zawodnik WHERE ROWNUM <= 3 and UPPER(" + column +") like UPPER('%" + name + "%')");
+            while (rs.next()) {
+                String nazwa = rs.getString(1);
+                nazwa += ", " + rs.getString(2);
+                nazwa += " " + rs.getString(3);
+                nazwa += ", " + rs.getString(8);
+                dysc.add(nazwa);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return dysc;
+   }
    
    private TableArray getOsoby(String type, String country, String dyscyplina){
         TableArray osoby = new TableArray();
@@ -121,8 +184,8 @@ public class IgrzyskaSingleton {
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_zaw, imię, nazwisko from " + adm + type + " where kraj like '" 
-                +country+"' and dyscyplina like '"+dyscyplina+"'");
+            rs = stmt.executeQuery("select id_zaw, imię, nazwisko from " + adm + type + " where kraj like " 
+                +modText(country)+" and dyscyplina like "+modText(dyscyplina));
             while (rs.next()) {
                 String nazwa = rs.getString(2) + " " + rs.getString(3);
                 osoby.getArray().add(nazwa);
@@ -195,6 +258,7 @@ public class IgrzyskaSingleton {
         return zawodnik;
    }
    
+   
    public void dodajZawodnika(String imie, String nazwisko, String zespol, String ocena, String idTrenera, 
            String dyscyplina, String kraj, String data){
         Statement stmt = null;
@@ -219,6 +283,9 @@ public class IgrzyskaSingleton {
    
    private String modText(String s){
        return (s == null || "".equals(s))? "'%'" : "'"+s+"'";
+   }
+   private String modTextNull(String s){
+       return (s == null || "".equals(s))? null : "'"+s+"'";
    }
 
     public FXMLDocumentController getMainWindow() {
@@ -263,5 +330,27 @@ public class IgrzyskaSingleton {
         return c;
    }
    
+    public void dodajMedal(String kolor, int id_zesp, int id_zaw, String dysc, String data){
+        try {
+            CallableStatement stmt = connection.prepareCall("{call dodaj_medal(?,?,?,?,?)}");
+            stmt.setString(1, kolor);
+            if(id_zesp>0)
+                stmt.setInt(2, id_zesp);
+            else
+                stmt.setNull(2, id_zesp);
+            if(id_zaw>0)
+                stmt.setInt(3, id_zaw);
+            else
+                stmt.setNull(3, id_zaw);
+            stmt.setString(4, dysc);
+            stmt.setString(5, data);
+            stmt.execute();
+            stmt.close(); 
+
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } 
+        
+    }
    
 }

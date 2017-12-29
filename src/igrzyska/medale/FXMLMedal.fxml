@@ -2,23 +2,55 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="229.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLMedalController">
+<AnchorPane id="AnchorPane" prefHeight="405.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLMedalController">
   <children>
-    <TextField layoutX="14.0" layoutY="22.0" prefWidth="200.0" promptText="Imię" />
-    <TextField layoutX="14.0" layoutY="51.0" prefWidth="200.0" promptText="Nazwisko" />
-    <SplitMenuButton layoutX="14.0" layoutY="83.0" mnemonicParsing="false" text="Data">
+    <SplitMenuButton layoutX="78.0" layoutY="232.0" mnemonicParsing="false" prefWidth="189.0" text="Data">
       <items>
         <MenuItem mnemonicParsing="false" text="Action 1" />
         <MenuItem mnemonicParsing="false" text="Action 2" />
       </items>
     </SplitMenuButton>
-    <Button layoutX="66.0" layoutY="125.0" mnemonicParsing="false" text="Złoty" />
-    <Button layoutX="132.0" layoutY="126.0" mnemonicParsing="false" text="Srebrny" />
-    <Button layoutX="207.0" layoutY="126.0" mnemonicParsing="false" text="Brązowy" />
-    <Button layoutX="144.0" layoutY="180.0" mnemonicParsing="false" text="OK" />
+    <Button layoutX="144.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#handleOkButton" text="OK" />
+    <ComboBox fx:id="cbDysc" editable="true" layoutX="14.0" layoutY="25.0" prefWidth="316.0" promptText="dyscyplina">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox fx:id="cbZloto" editable="true" layoutX="14.0" layoutY="103.0" prefWidth="316.0" promptText="Złoto">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox fx:id="cbSrebro" editable="true" layoutX="14.0" layoutY="134.0" prefWidth="316.0" promptText="Srebro">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox fx:id="cbBraz" editable="true" layoutX="14.0" layoutY="168.0" prefWidth="316.0" promptText="Brąz">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
   </children>
 </AnchorPane>
