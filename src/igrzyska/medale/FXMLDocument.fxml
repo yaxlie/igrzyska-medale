@@ -50,6 +50,5 @@
     </Pane>
     <Button fx:id="dMedalButton" layoutX="161.0" layoutY="518.0" mnemonicParsing="false" text="Dodaj Medal" />
     <Button fx:id="buttonNZawodnik" layoutX="259.0" layoutY="440.0" mnemonicParsing="false" text="dodaj Zawodnika" />
-    <Button fx:id="buttonNKraj" layoutX="70.0" layoutY="451.0" mnemonicParsing="false" text="dodaj Kraj" />
   </children>
 </AnchorPane>

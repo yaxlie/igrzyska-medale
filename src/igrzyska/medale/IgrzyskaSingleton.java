@@ -146,6 +146,52 @@ public class IgrzyskaSingleton {
         return dysc;
    }
     
+        public boolean existDyscyplina(String name){
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select nazwa " +
+            "from " + adm + "dyscyplina WHERE UPPER(nazwa) like UPPER('" + name + "')");
+            while (rs.next()) {
+                return true;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return false;
+   }
+        
+    public void dodajDyscypline(String nazwa, String data_wp, String opis){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            int changes;
+            String val = "(" + modTextNull(nazwa) + ", " + modTextNull(data_wp) + ", " + modTextNull(opis) + ",null, null)" ;
+            changes = stmt.executeUpdate("INSERT INTO "+adm+"dyscyplina VALUES" + val);
+            System.out.println("Wstawiono " + changes + " krotek."); 
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+    
     public ArrayList<String> getOsoby(String table){
         ArrayList<String> dysc = new ArrayList<>();
         Statement stmt = null;
@@ -265,10 +311,10 @@ public class IgrzyskaSingleton {
         try {
             stmt = connection.createStatement();
             int changes;
-            String val = "(null, " + modText(imie) + ", " + modText(nazwisko) + ", " + modText(zespol) + ", " 
+            String val = "(null, " + modTextNull(imie) + ", " + modTextNull(nazwisko) + ", " + modTextNull(zespol) + ", " 
                     + modText(ocena) + ", " + modText(idTrenera) + 
-                    ", " + modText(dyscyplina) + ", " + modText(kraj) + ", " + modText(data) + ")" ;
-            changes = stmt.executeUpdate("INSERT INTO zawodnik VALUES" + val);
+                    ", " + modTextNull(dyscyplina) + ", " + modTextNull(kraj) + ", " + modTextNull(data) + ")" ;
+            changes = stmt.executeUpdate("INSERT INTO "+adm+"zawodnik VALUES" + val);
             System.out.println("Wstawiono " + changes + " krotek."); 
         } catch (SQLException ex) {
             System.out.println("Bład wykonania polecenia" + ex.toString());

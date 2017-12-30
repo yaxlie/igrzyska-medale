@@ -194,6 +194,9 @@ public class FXMLDocumentController implements Initializable {
         ObservableList<String> i = FXCollections.observableArrayList(osobyTable.getArray());
         osoby.setItems(i);
         setMedaleList();
+        
+        dyscyplinyList = FXCollections.observableArrayList(igrzyska.getDyscypliny());
+        cbDyscyplina.setItems(dyscyplinyList);
     }
     
     public void setMedaleList(){

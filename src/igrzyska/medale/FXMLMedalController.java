@@ -48,16 +48,22 @@ public class FXMLMedalController implements Initializable {
     
     @FXML
     private void handleOkButton() {
-        String[] parts = cbZloto.getText().split("\\,");
-        zlotoId = Integer.parseInt(parts[0]);
-        
-        parts = cbSrebro.getText().split("\\,");
-        srebroId = Integer.parseInt(parts[0]);
-                
-        parts = cbBraz.getText().split("\\,");
-        brazId = Integer.parseInt(parts[0]);
-        
-        if(zlotoId != 0 && srebroId != 0 && brazId !=0){
+        try{
+            String[] parts = cbZloto.getText().split("\\,");
+            zlotoId = Integer.parseInt(parts[0]);
+
+            parts = cbSrebro.getText().split("\\,");
+            srebroId = Integer.parseInt(parts[0]);
+
+            parts = cbBraz.getText().split("\\,");
+            brazId = Integer.parseInt(parts[0]);
+        }catch(Exception e){
+            
+        }
+        if(igrzyska.getZawodnik(zlotoId)!=null && igrzyska.getZawodnik(srebroId)!=null && 
+                igrzyska.getZawodnik(brazId)!=null && !"".equals(cbDysc.getText())){
+            if(!igrzyska.existDyscyplina(cbDysc.getText()))
+                igrzyska.dodajDyscypline(cbDysc.getText(), null, null);
             igrzyska.dodajMedal("ZŁOTO", 0, zlotoId, cbDysc.getText(), null);
             igrzyska.dodajMedal("SREBRO", 0, srebroId, cbDysc.getText(), null);
             igrzyska.dodajMedal("BRĄZ", 0, brazId, cbDysc.getText(), null);
