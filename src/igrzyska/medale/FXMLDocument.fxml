@@ -46,9 +46,11 @@
       <children>
         <Label layoutX="63.0" layoutY="6.0" text="Reprezentacja" />
         <ListView fx:id="osoby" layoutX="12.0" layoutY="35.0" prefHeight="235.0" prefWidth="176.99997792968497" />
+        <Button fx:id="changeZZButton" layoutX="179.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
       </children>
     </Pane>
     <Button fx:id="dMedalButton" layoutX="161.0" layoutY="518.0" mnemonicParsing="false" text="Dodaj Medal" />
     <Button fx:id="buttonNZawodnik" layoutX="259.0" layoutY="440.0" mnemonicParsing="false" text="dodaj Zawodnika" />
+    <Button fx:id="refreshButton" layoutX="388.0" layoutY="9.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
   </children>
 </AnchorPane>

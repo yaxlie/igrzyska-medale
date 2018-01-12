@@ -25,7 +25,7 @@ public class IgrzyskaSingleton {
    private static IgrzyskaSingleton instance = null;
    private Connection connection;
    private Properties connectionProps;
-   private static String adm = "inf127301.";
+   private static String adm = "admin.";
    
    private SelectedStuff selectedStuff;
    private ArrayList<String> krajList;
@@ -37,11 +37,11 @@ public class IgrzyskaSingleton {
         selectedStuff = new SelectedStuff();
         krajList = new ArrayList<>();
         connectionProps = new Properties();
-        connectionProps.put("user", "inf127301");
-        connectionProps.put("password", "inf127301");
+        connectionProps.put("user", "admin");
+        connectionProps.put("password", "admin");
         
         try {
-            connection = DriverManager.getConnection("jdbc:oracle:thin:@//admlab2.cs.put.poznan.pl:1521/dblab02_students.cs.put.poznan.pl",
+            connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
             connectionProps);
             System.out.println("Połączono z bazą danych");
         } catch (SQLException ex) {
@@ -56,6 +56,10 @@ public class IgrzyskaSingleton {
       }
       return instance;
    }
+
+    public void setSelectedStuff(SelectedStuff selectedStuff) {
+        this.selectedStuff = selectedStuff;
+    }
    
    public ArrayList<String> getCountries(){
         ArrayList<String> countries = new ArrayList<>();
@@ -252,6 +256,36 @@ public class IgrzyskaSingleton {
             }
         }
         return osoby;
+   }
+   
+    public TableArray getZespoly(String country, String dyscyplina){
+        TableArray zespoly = new TableArray();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select numer, kraj_nazwa, dyscyplina_nazwa from " + adm + "zespół" + " where kraj_nazwa like " 
+                +modText(country)+" and dyscyplina_nazwa like "+modText(dyscyplina));
+            while (rs.next()) {
+                String nazwa = rs.getString(2) + " : " + rs.getString(3);
+                zespoly.getArray().add(nazwa);
+                zespoly.getId().add(rs.getInt(1));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return zespoly;
    }
    
    public TableArray getZawodnicy(String country, String dyscyplina){

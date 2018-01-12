@@ -40,9 +40,17 @@ import javafx.stage.Stage;
 public class FXMLDocumentController implements Initializable {
     private IgrzyskaSingleton igrzyska = IgrzyskaSingleton.getInstance();
     private TableArray osobyTable;
+    private TableArray zespolyTable;
+    private boolean showZespoly;
+    private ImageView ivTeam;
+    private ImageView ivUser;
     
     @FXML
     private Button dMedalButton;
+    @FXML
+    private Button refreshButton;
+    @FXML
+    private Button changeZZButton;
     @FXML
     private ChoiceBox cbDyscyplina;
     @FXML
@@ -95,6 +103,7 @@ public class FXMLDocumentController implements Initializable {
         igrzyska.setMainWindow(this);
         krajeList = FXCollections.observableArrayList(igrzyska.getCountries());
         countries.setItems(krajeList);
+        showZespoly = false;
         
         File file = new File("src/gold.png");
         Image image = new Image(file.toURI().toString());
@@ -108,14 +117,42 @@ public class FXMLDocumentController implements Initializable {
         image = new Image(file.toURI().toString());
         iBronze.setImage(image);
         
+        file = new File("src/refresh.png");
+        image = new Image(file.toURI().toString());
+        ImageView iv = new ImageView(image);
+        iv.setFitHeight(refreshButton.getMinHeight()-5);
+        iv.setFitWidth(refreshButton.getMinWidth()-5);
+        refreshButton.setGraphic(iv);
+        
+        file = new File("src/team.png");
+        image = new Image(file.toURI().toString());
+        ivTeam = new ImageView(image);
+        ivTeam.setFitHeight(changeZZButton.getMinHeight()-5);
+        ivTeam.setFitWidth(changeZZButton.getMinWidth()-5);
+        
+        file = new File("src/user.png");
+        image = new Image(file.toURI().toString());
+        ivUser = new ImageView(image);
+        ivUser.setFitHeight(changeZZButton.getMinHeight()-5);
+        ivUser.setFitWidth(changeZZButton.getMinWidth()-5);
+        
+        changeZZButton.setGraphic(ivTeam);
+        
+        changeZZButton.setOnAction((event) -> {
+            showZespoly = !showZespoly;
+            refreshView();
+        }); 
+        
+        refreshButton.setOnAction((event) -> {
+            reset();
+        }); 
+        
         countries.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
         @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 //                String dysc = dyscyplina.getValue().toString();
                 igrzyska.getSelectedStuff().setKraj(newValue);
-                osobyTable = igrzyska.getZawodnicy(newValue, igrzyska.getSelectedStuff().getDyscyplina());
-                ObservableList<String> i = FXCollections.observableArrayList(osobyTable.getArray());
-                osoby.setItems(i);
+                setOsobyListView(newValue, igrzyska.getSelectedStuff().getDyscyplina(), showZespoly, false);
             }
         });
         
@@ -190,13 +227,15 @@ public class FXMLDocumentController implements Initializable {
         krajeList = FXCollections.observableArrayList(igrzyska.getCountries());
         countries.setItems(krajeList);
         
-        osobyTable = igrzyska.getZawodnicy(igrzyska.getSelectedStuff().getKraj(), igrzyska.getSelectedStuff().getDyscyplina());
-        ObservableList<String> i = FXCollections.observableArrayList(osobyTable.getArray());
-        osoby.setItems(i);
+        setOsobyListView(igrzyska.getSelectedStuff().getKraj()
+                    , igrzyska.getSelectedStuff().getDyscyplina(), showZespoly, false);
         setMedaleList();
         
         dyscyplinyList = FXCollections.observableArrayList(igrzyska.getDyscypliny());
-        cbDyscyplina.setItems(dyscyplinyList);
+        if(cbDyscyplina.getItems().size() < dyscyplinyList.size())
+            cbDyscyplina.setItems(dyscyplinyList);
+        
+        changeZZButton.setGraphic(!showZespoly? ivTeam: ivUser);
     }
     
     public void setMedaleList(){
@@ -213,4 +252,26 @@ public class FXMLDocumentController implements Initializable {
         return FXCollections.observableArrayList(list);
     }
     
+    private void setOsobyListView(String kraj, String dyscyplina, boolean zespoly, boolean returnHigher){
+        osobyTable = igrzyska.getZawodnicy(kraj, dyscyplina);
+        zespolyTable = igrzyska.getZespoly(kraj, dyscyplina);
+        ObservableList<String> i;
+        
+        if(returnHigher){
+            i = osobyTable.getArray().size() >= zespolyTable.getArray().size()? 
+                FXCollections.observableArrayList(osobyTable.getArray()) 
+                :FXCollections.observableArrayList(zespolyTable.getArray());
+        }  
+        else{ 
+            i = zespoly?FXCollections.observableArrayList(zespolyTable.getArray()) 
+                :FXCollections.observableArrayList(osobyTable.getArray());
+        }
+        osoby.setItems(i);
+    }
+    
+    private void reset(){
+        showZespoly = false;
+        igrzyska.setSelectedStuff(new SelectedStuff());
+        refreshView();
+    }
 }
