@@ -5,6 +5,8 @@
  */
 package igrzyska.medale;
 
+import igrzyska.medale.structures.Zawodnik;
+
 /**
  *
  * @author Marcin
@@ -13,7 +15,7 @@ public class SelectedStuff {
     private String kraj = null;
     private String dyscyplina = null;
     private int zespol;
-    private int zawodnik;
+    private Zawodnik zawodnik;
     private int trener;
     private int medal;
 
@@ -33,11 +35,11 @@ public class SelectedStuff {
         this.dyscyplina = dyscyplina;
     }
 
-    public int getZawodnik() {
+    public Zawodnik getZawodnik() {
         return zawodnik;
     }
 
-    public void setZawodnik(int zawodnik) {
+    public void setZawodnik(Zawodnik zawodnik) {
         this.zawodnik = zawodnik;
     }
 

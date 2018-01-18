@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -27,6 +28,9 @@ public class IgrzyskaSingleton {
    private Properties connectionProps;
    private static String adm = "admin.";
    
+   private String username = "";
+   private String password = "";
+   
    private SelectedStuff selectedStuff;
    private ArrayList<String> krajList;
    
@@ -36,20 +40,22 @@ public class IgrzyskaSingleton {
         connection = null;
         selectedStuff = new SelectedStuff();
         krajList = new ArrayList<>();
-        connectionProps = new Properties();
-        connectionProps.put("user", "admin");
-        connectionProps.put("password", "admin");
-        
-        try {
-            connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
-            connectionProps);
-            System.out.println("Połączono z bazą danych");
-        } catch (SQLException ex) {
-            Logger.getLogger(IgrzyskaMedale.class.getName()).log(Level.SEVERE,
-            "nie udało się połączyć z bazą danych", ex);
-            System.exit(-1);
-        } 
    }
+   
+   public void connect(String username, String password) throws SQLException{
+       
+       this.username = username;
+       this.password = password;
+       
+        connectionProps = new Properties();
+        connectionProps.put("user", username);
+        connectionProps.put("password", password);
+        
+        connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
+        connectionProps);
+        System.out.println("Połączono z bazą danych");
+   }
+   
    public static IgrzyskaSingleton getInstance() {
       if(instance == null) {
          instance = new IgrzyskaSingleton();
@@ -361,6 +367,70 @@ public class IgrzyskaSingleton {
         }
    }
    
+   public void usunKraj(String kraj){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM kraj WHERE nazwa like '" + kraj + "'");
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
+   public void usunZawodnika(int id){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM zawodnik WHERE id_zaw = "+ Integer.toString(id));
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
+      public void usunDyscypline(String nazwa){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM dyscyplina WHERE nazwa like '"+ nazwa + "'");
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+      
+    public void usunMedal(int id){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM medal WHERE id_med =" + id);
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
    private String modText(String s){
        return (s == null || "".equals(s))? "'%'" : "'"+s+"'";
    }
@@ -454,5 +524,51 @@ public class IgrzyskaSingleton {
             System.out.println("Bład wykonania polecenia" + ex.toString());
         }   
     }
+        
+    public int getKrajScore(String kraj){
+        int score = 0;
+         try {
+           CallableStatement stmt = connection.prepareCall("{? = call getKrajScore(?)}");
+           stmt.registerOutParameter(1, Types.INTEGER);
+           stmt.setString(2,kraj);
+           stmt.execute();
+           score = stmt.getInt(1);
+           stmt.close();
+           
+       } catch (SQLException ex) {
+             System.out.println("Bład wykonania polecenia" + ex.toString());
+       }
+       return score;
+    } 
+    
+       public TableArray getMedale(int id_zaw){
+        TableArray medale = new TableArray();
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select id_med, kolor, dyscyplina, data_wręczenia from " + adm + "medal where zawodnik_id_zaw"
+                    + " = " + Integer.toString(id_zaw));
+            while (rs.next()) {
+                String s = "<<" + rs.getString(2)+ ">>" + " (" + rs.getString(3) + ")     " + rs.getString(4).split(" ")[0];
+                medale.getArray().add(s);
+                medale.getId().add(rs.getInt(1));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return medale;
+   }
    
 }

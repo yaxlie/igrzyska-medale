@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +34,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import layouts.FXMLLoginController;
+import layouts.FXMLMedaleController;
 
 /**
  *
@@ -44,7 +48,16 @@ public class FXMLDocumentController implements Initializable {
     private boolean showZespoly;
     private ImageView ivTeam;
     private ImageView ivUser;
+    private ImageView ivDelete;
     
+    @FXML
+    private Button removeKraj;
+    @FXML
+    private Button removeDyscyplina;
+    @FXML
+    private Button removeZawodnik;
+    @FXML
+    private Button modButton;
     @FXML
     private Button dMedalButton;
     @FXML
@@ -61,6 +74,8 @@ public class FXMLDocumentController implements Initializable {
     private ChoiceBox dyscyplina;
     @FXML
     private ListView osoby;
+    @FXML
+    private Button medaleButton;
     @FXML 
     private ListView countries;
     @FXML 
@@ -101,7 +116,7 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
                 
         igrzyska.setMainWindow(this);
-        krajeList = FXCollections.observableArrayList(igrzyska.getCountries());
+        setKrajeList();
         countries.setItems(krajeList);
         showZespoly = false;
         
@@ -117,24 +132,64 @@ public class FXMLDocumentController implements Initializable {
         image = new Image(file.toURI().toString());
         iBronze.setImage(image);
         
-        file = new File("src/refresh.png");
-        image = new Image(file.toURI().toString());
-        ImageView iv = new ImageView(image);
-        iv.setFitHeight(refreshButton.getMinHeight()-5);
-        iv.setFitWidth(refreshButton.getMinWidth()-5);
+        ImageView iv = assignIV(refreshButton, "src/refresh.png");
         refreshButton.setGraphic(iv);
         
-        file = new File("src/team.png");
-        image = new Image(file.toURI().toString());
-        ivTeam = new ImageView(image);
-        ivTeam.setFitHeight(changeZZButton.getMinHeight()-5);
-        ivTeam.setFitWidth(changeZZButton.getMinWidth()-5);
+        ivTeam = assignIV(changeZZButton, "src/team.png");
+        ivUser = assignIV(changeZZButton, "src/user.png");
         
-        file = new File("src/user.png");
-        image = new Image(file.toURI().toString());
-        ivUser = new ImageView(image);
-        ivUser.setFitHeight(changeZZButton.getMinHeight()-5);
-        ivUser.setFitWidth(changeZZButton.getMinWidth()-5);
+        iv = assignIV(removeKraj, "src/delete.png");
+        removeKraj.setGraphic(iv);
+        removeKraj.setOnAction((event) -> {
+            igrzyska.usunKraj(igrzyska.getSelectedStuff().getKraj());
+            refreshView();
+        }); 
+        
+        iv = assignIV(removeDyscyplina, "src/delete.png");
+        removeDyscyplina.setGraphic(iv);
+        
+        iv = assignIV(removeDyscyplina, "src/edit.png");
+        modButton.setGraphic(iv);
+        
+        iv = assignIV(removeDyscyplina, "src/sport.png");
+        medaleButton.setGraphic(iv);
+        
+        iv = assignIV(removeZawodnik, "src/delete.png");
+        removeZawodnik.setGraphic(iv);
+        removeZawodnik.setOnAction((event) -> {
+            igrzyska.usunZawodnika(osobyTable.getId().get(igrzyska.getSelectedStuff().getZawodnik().getId()));
+            refreshView();
+        }); 
+        
+        removeDyscyplina.setOnAction((event) -> {
+            igrzyska.usunDyscypline(cbDyscyplina.getSelectionModel().getSelectedItem().toString());
+            reset();
+            refreshView();
+        }); 
+        
+        medaleButton.setOnAction((event) -> {
+            try {
+                        
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/layouts/FXMLMedale.fxml"));  
+                    
+                    Parent root = (Parent)fxmlLoader.load(); 
+                    
+                    FXMLMedaleController controller = fxmlLoader.<FXMLMedaleController>getController();
+                    controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZawodnik().getId()));
+                    controller.getLabel().setText(igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
+                            +igrzyska.getSelectedStuff().getZawodnik().getNazwisko());
+                    
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setTitle("Medale Zawodnika/Reprezentacji");
+                    stage.show();  
+                    stage.show();  
+                        
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        }); 
         
         changeZZButton.setGraphic(ivTeam);
         
@@ -178,6 +233,7 @@ public class FXMLDocumentController implements Initializable {
                     data.setText(z.getDataUr());
                     rating.setText(Float.toString(z.getRating()));
                     kraj.setText(z.getKraj());
+                    igrzyska.getSelectedStuff().setZawodnik(z);
                 }
             }
         });
@@ -223,8 +279,54 @@ public class FXMLDocumentController implements Initializable {
         refreshView();
     }  
     
+    private class Kraj implements Comparable{
+        private String kraj;
+        private int score;
+        public Kraj(String kraj, int score){
+            this.kraj = kraj;
+            this.score = score;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public String getKraj() {
+            return kraj;
+        }
+        
+        @Override
+        public int compareTo(Object k) {
+            int comp=((Kraj)k).getScore();
+            return comp - this.getScore();
+        }
+        
+    }
+    
+    private void setKrajeList(){
+        ArrayList<Kraj>kList = new ArrayList<>();
+        ArrayList<String> kraje = igrzyska.getCountries();
+        for(String k : kraje){
+            kList.add(new Kraj(k, igrzyska.getKrajScore(k.toUpperCase())));
+        }
+//        Comparator<Kraj> comparator = Comparator.comparingInt(Kraj::getScore);
+//        kList.sort(comparator);
+
+        Collections.sort(kList);
+        
+        kraje = new ArrayList<>();
+        
+        for(Kraj k : kList){
+            kraje.add(k.getKraj());
+        }
+        
+        krajeList = FXCollections.observableArrayList(kraje);
+        
+        countries.setItems(krajeList);
+    }
     public void refreshView(){
-        krajeList = FXCollections.observableArrayList(igrzyska.getCountries());
+        setKrajeList();
+        
         countries.setItems(krajeList);
         
         setOsobyListView(igrzyska.getSelectedStuff().getKraj()
@@ -246,7 +348,7 @@ public class FXMLDocumentController implements Initializable {
     
     private ObservableList<Integer> getMedaleArray(String dysc, String kolor){
         ArrayList<Integer> list = new ArrayList<>();
-        for (String kraj : igrzyska.getKrajList()){
+        for (String kraj : krajeList){
             list.add(igrzyska.countMedale(kraj, dysc, kolor));
         }
         return FXCollections.observableArrayList(list);
@@ -270,8 +372,22 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void reset(){
+        countries.getSelectionModel().clearSelection();
+        cbDyscyplina.getSelectionModel().clearSelection();
+        dyscyplinyList = FXCollections.observableArrayList(igrzyska.getDyscypliny());
+        cbDyscyplina.setItems(dyscyplinyList);
+        osoby.getSelectionModel().clearSelection();
         showZespoly = false;
         igrzyska.setSelectedStuff(new SelectedStuff());
         refreshView();
+    }
+    
+    private ImageView assignIV(Button button, String imagePath){
+        File file = new File(imagePath);
+        Image image = new Image(file.toURI().toString());
+        ImageView iv = new ImageView(image);
+        iv.setFitHeight(button.getMinHeight()-5);
+        iv.setFitWidth(button.getMinWidth()-5);
+        return iv;
     }
 }

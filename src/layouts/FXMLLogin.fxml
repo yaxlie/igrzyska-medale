@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="190.0" prefWidth="363.0000999999975" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="layouts.FXMLLoginController">
+  <children>
+    <TextField fx:id="loginField" layoutX="78.0" layoutY="84.0" onAction="#login" prefWidth="200.0" promptText="login" />
+    <PasswordField fx:id="passwordField" layoutX="78.0" layoutY="112.0" onAction="#login" prefWidth="200.0" />
+    <Button fx:id="button" layoutX="154.0" layoutY="147.0" mnemonicParsing="false" text="OK" />
+    <Label layoutX="31.0" layoutY="19.0" text="Igrzyska 2020">
+      <font>
+        <Font size="36.0" />
+      </font>
+    </Label>
+  </children>
+</AnchorPane>

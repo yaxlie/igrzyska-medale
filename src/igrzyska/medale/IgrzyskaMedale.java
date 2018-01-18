@@ -29,11 +29,11 @@ public class IgrzyskaMedale extends Application {
         
         igrzyska = IgrzyskaSingleton.getInstance();
         
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));  
+        Parent root = FXMLLoader.load(getClass().getResource("/layouts/FXMLLogin.fxml"));  
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
-        stage.setTitle("Tokio 2020");
+        stage.setTitle("Login Tokio 2020");
         stage.show();   
         
     }

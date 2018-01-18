@@ -1,3 +1,29 @@
+create or replace function getKrajScore(kraj_id in VARCHAR2) 
+   RETURN NUMBER 
+   IS
+   zl INTEGER;
+   sr INTEGER;
+   br INTEGER;
+   BEGIN 
+      SELECT count(*) 
+      INTO zl 
+      FROM medal 
+      WHERE Zawodnik_id_zaw in (select id_zaw from zawodnik where kraj = kraj_id) and kolor like 'Z£OTO';
+      
+    SELECT count(*) 
+      INTO sr 
+      FROM medal 
+      WHERE Zawodnik_id_zaw in (select id_zaw from zawodnik where kraj = kraj_id) and kolor like 'SREBRO';
+      
+    SELECT count(*) 
+      INTO br 
+      FROM medal 
+      WHERE Zawodnik_id_zaw in (select id_zaw from zawodnik where kraj = kraj_id) and kolor like 'BR¥Z';
+      
+      RETURN(zl*7 + sr * 3 + br); 
+    END;
+/
+
 CREATE OR REPLACE PROCEDURE
 dodaj_zawodnik (imie IN VARCHAR2,
 nazwisko IN VARCHAR2,
@@ -43,4 +69,19 @@ end if;
 END dodaj_zawodnik;
 /
 commit;
+/
+
+create or replace PROCEDURE
+dodaj_medal (kolor IN VARCHAR2,
+zespol_id IN NUMBER,
+zawodnik_id IN NUMBER,
+dyscyplina IN VARCHAR2,
+data_wr IN VARCHAR2) IS
+BEGIN
+IF data_wr is not null then
+insert into admin.medal values(null, kolor, zespol_id, to_date(data_wr, 'dd-mm-yy'),zawodnik_id, dyscyplina);
+else
+insert into admin.medal values(null, kolor, zespol_id, (SELECT SYSDATE FROM DUAL),zawodnik_id, dyscyplina);
+end if;
+END dodaj_medal;
 /

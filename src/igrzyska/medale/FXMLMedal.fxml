@@ -16,9 +16,9 @@
       </items>
     </SplitMenuButton>
     <Button layoutX="144.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#handleOkButton" text="OK" />
-    <TextField id="cb" fx:id="cbDysc" layoutX="14.0" layoutY="31.0" prefWidth="316.0" promptText="dyscyplina" />
-    <TextField id="c" fx:id="cbZloto" layoutX="14.0" layoutY="101.0" prefWidth="316.0" promptText="złoto" />
-    <TextField fx:id="cbSrebro" layoutX="14.0" layoutY="133.0" prefWidth="316.0" promptText="srebro" />
-    <TextField fx:id="cbBraz" layoutX="14.0" layoutY="164.0" prefWidth="316.0" promptText="brąz" />
+    <TextField id="cb" fx:id="cbDysc" layoutX="14.0" layoutY="31.0" prefWidth="316.0" promptText="(podaj dyscyplinę)" />
+    <TextField id="c" fx:id="cbZloto" layoutX="14.0" layoutY="101.0" prefWidth="316.0" promptText="(podaj zawodnika) ZŁOTO" />
+    <TextField fx:id="cbSrebro" layoutX="14.0" layoutY="133.0" prefWidth="316.0" promptText="(podaj zawodnika) SREBRO" />
+    <TextField fx:id="cbBraz" layoutX="14.0" layoutY="164.0" prefWidth="316.0" promptText="(podaj zawodnika) BRĄZ" />
   </children>
 </AnchorPane>
