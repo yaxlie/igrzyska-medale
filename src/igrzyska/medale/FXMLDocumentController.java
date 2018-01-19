@@ -36,6 +36,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import layouts.FXMLLoginController;
 import layouts.FXMLMedaleController;
+import layouts.FXMLModZawodnikController;
 
 /**
  *
@@ -84,8 +85,6 @@ public class FXMLDocumentController implements Initializable {
     private Label nazwisko;
     @FXML 
     private Label data;
-    @FXML 
-    private Label rating;
     @FXML 
     private Label kraj;
     @FXML
@@ -151,6 +150,29 @@ public class FXMLDocumentController implements Initializable {
         iv = assignIV(removeDyscyplina, "src/edit.png");
         modButton.setGraphic(iv);
         
+        modButton.setOnAction((event) -> {
+            try {     
+                    Zawodnik z = igrzyska.getSelectedStuff().getZawodnik();
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FXMLNowyZawodnik.fxml"));
+                    fxmlLoader.setController(new FXMLModZawodnikController(z));
+                    Parent root = (Parent)fxmlLoader.load(); 
+                    
+                    //FXMLModZawodnikController controller = fxmlLoader.<FXMLModZawodnikController>getController();
+                    String zawodnik = igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
+                            +igrzyska.getSelectedStuff().getZawodnik().getNazwisko();
+                    
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setTitle(zawodnik);
+                    stage.show();  
+                    stage.show();  
+                        
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        });
+        
         iv = assignIV(removeDyscyplina, "src/sport.png");
         medaleButton.setGraphic(iv);
         
@@ -168,8 +190,7 @@ public class FXMLDocumentController implements Initializable {
         }); 
         
         medaleButton.setOnAction((event) -> {
-            try {
-                        
+            try {     
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/layouts/FXMLMedale.fxml"));  
                     
                     Parent root = (Parent)fxmlLoader.load(); 
@@ -231,7 +252,6 @@ public class FXMLDocumentController implements Initializable {
                     imie.setText(z.getImie());
                     nazwisko.setText(z.getNazwisko());
                     data.setText(z.getDataUr());
-                    rating.setText(Float.toString(z.getRating()));
                     kraj.setText(z.getKraj());
                     igrzyska.getSelectedStuff().setZawodnik(z);
                 }
@@ -260,6 +280,7 @@ public class FXMLDocumentController implements Initializable {
         buttonNZawodnik.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setController(new FXMLNowyZawodnikController());
                 fxmlLoader.setLocation(getClass().getResource("FXMLNowyZawodnik.fxml"));
                 /* 
                  * if "fx:controller" is not set in fxml

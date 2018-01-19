@@ -11,10 +11,14 @@ package igrzyska.medale.structures;
  */
 public class Zawodnik extends Osoba{
     private float rating;
+    private String dyscyplina;
+    int idTrener;
     
-    public Zawodnik(int id, String imie, String nazwisko, String kraj, String dataUr, float rating) {
+    public Zawodnik(int id, String imie, String nazwisko, String kraj, String dataUr, float rating, String dyscyplina, 
+            int idTrener) {
         super(id, imie, nazwisko, kraj, dataUr);
         this.rating = rating;
+        this.dyscyplina = dyscyplina;
     }
 
     public float getRating() {
@@ -24,5 +28,24 @@ public class Zawodnik extends Osoba{
     public void setRating(float rating) {
         this.rating = rating;
     }
+
+    public String getDyscyplina() {
+        return dyscyplina;
+    }
+
+    public void setDyscyplina(String dyscyplina) {
+        this.dyscyplina = dyscyplina;
+    }
+
+    public int getIdTrener() {
+        return idTrener;
+    }
+
+    public void setIdTrener(int idTrener) {
+        this.idTrener = idTrener;
+    }
+    
+    
+    
     
 }

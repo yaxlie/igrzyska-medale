@@ -317,7 +317,7 @@ public class IgrzyskaSingleton {
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_zaw, imię, nazwisko, ocena, kraj, data_ur from " + adm + "zawodnik where id_zaw = " + id);
+            rs = stmt.executeQuery("select id_zaw, imię, nazwisko, ocena, kraj, data_ur, dyscyplina, Trener_id_tren from " + adm + "zawodnik where id_zaw = " + id);
             while (rs.next()) {
                 zawodnik = new Zawodnik(
                         rs.getInt(1),
@@ -325,7 +325,9 @@ public class IgrzyskaSingleton {
                         rs.getString(3),
                         rs.getString(5),
                         rs.getString(6),
-                        rs.getFloat(4));
+                        rs.getFloat(4),
+                        rs.getString(7),
+                        rs.getInt(8));
             }
         } catch (SQLException ex) {
             System.out.println("Bład wykonania polecenia" + ex.toString());
@@ -356,6 +358,27 @@ public class IgrzyskaSingleton {
                     ", " + modTextNull(dyscyplina) + ", " + modTextNull(kraj) + ", " + modTextNull(data) + ")" ;
             changes = stmt.executeUpdate("INSERT INTO "+adm+"zawodnik VALUES" + val);
             System.out.println("Wstawiono " + changes + " krotek."); 
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
+   public void updateZawodnik(int id, String imie, String nazwisko, String zespol, int idTrenera, 
+           String dyscyplina, String kraj, String data){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String val = "imię = " + modTextNull(imie) + ", nazwisko = " + modTextNull(nazwisko) + 
+                    ", Zespół_numer = " + modTextNull(zespol) +  ", Trener_id_tren = null" //+ idTrenera  
+                    + ", dyscyplina = " + modTextNull(dyscyplina) + ", kraj = " + modTextNull(kraj) 
+                    + ", data_ur = " + modTextNull(data) ;
+            stmt.executeUpdate("Update "+adm+"zawodnik set " + val + " where id_zaw = " + id);
         } catch (SQLException ex) {
             System.out.println("Bład wykonania polecenia" + ex.toString());
         } finally {
@@ -415,20 +438,11 @@ public class IgrzyskaSingleton {
         }
    }
       
-    public void usunMedal(int id){
+    public void usunMedal(int id) throws SQLException{
         Statement stmt = null;
-        try {
             stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM medal WHERE id_med =" + id);
-        } catch (SQLException ex) {
-            System.out.println("Bład wykonania polecenia" + ex.toString());
-        } finally {
-            if (stmt != null) {
-                try {
-                    stmt.close();
-                } catch (SQLException e) { /* kod obsługi */ }
-            }
-        }
+            stmt.close();
    }
    
    private String modText(String s){

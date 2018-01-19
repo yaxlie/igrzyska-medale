@@ -6,18 +6,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="348.0" prefWidth="255.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLNowyZawodnikController">
+<AnchorPane id="AnchorPane" prefHeight="281.0" prefWidth="254.9998779296875" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
   <children>
-    <Button fx:id="bDodaj" layoutX="109.0" layoutY="291.0" mnemonicParsing="false" text="OK" />
+    <Button fx:id="bDodaj" layoutX="109.0" layoutY="253.0" mnemonicParsing="false" text="OK" />
     <TextField fx:id="tImie" layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="imię" />
     <TextField fx:id="tNazwisko" layoutX="14.0" layoutY="42.0" prefWidth="200.0" promptText="nazwisko" />
     <TextField layoutX="14.0" layoutY="71.0" prefWidth="200.0" promptText="data urodzenia" />
     <TextField fx:id="tTrener" layoutX="14.0" layoutY="101.0" prefWidth="200.0" promptText="trener" />
     <TextField fx:id="tKraj" layoutX="14.0" layoutY="130.0" prefWidth="200.0" promptText="kraj" />
     <TextField fx:id="tDyscyplina" layoutX="14.0" layoutY="163.0" prefWidth="200.0" promptText="dyscyplina" />
-    <CheckBox fx:id="zespol" contentDisplay="LEFT" layoutX="78.0" layoutY="252.0" mnemonicParsing="false" text="Gra w zespole?" textAlignment="LEFT" />
-    <Slider fx:id="slider" layoutX="86.0" layoutY="209.0" prefWidth="114.0" />
-    <Label layoutX="14.0" layoutY="207.0" text="Ocena :" />
-    <Label fx:id="ocena" layoutX="62.0" layoutY="207.0" text="1.0" />
+    <CheckBox fx:id="zespol" contentDisplay="LEFT" layoutX="78.0" layoutY="207.0" mnemonicParsing="false" text="Gra w zespole?" textAlignment="LEFT" />
   </children>
 </AnchorPane>

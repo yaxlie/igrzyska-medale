@@ -34,25 +34,25 @@ import org.controlsfx.control.textfield.TextFields;
 public class FXMLNowyZawodnikController implements Initializable {
     
     @FXML
-    private Button bDodaj;
+    protected Button bDodaj;
     @FXML
-    private TextField tImie;
+    protected TextField tImie;
     @FXML
-    private TextField tNazwisko;
+    protected TextField tNazwisko;
     @FXML
-    private TextField tKraj;
+    protected TextField tKraj;
     @FXML
-    private TextField tDyscyplina;
+    protected TextField tDyscyplina;
     @FXML
-    private TextField tTrener;
+    protected TextField tTrener;
     @FXML
-    private Slider slider;
+    protected Slider slider;
     @FXML
-    private Label ocena;
+    protected Label ocena;
     @FXML
-    private CheckBox zespol;
+    protected CheckBox zespol;
     
-    private IgrzyskaSingleton igrzyska;
+    protected IgrzyskaSingleton igrzyska;
     /**
      * Initializes the controller class.
      */
