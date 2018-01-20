@@ -6,6 +6,7 @@
 package igrzyska.medale;
 
 import igrzyska.medale.structures.Zawodnik;
+import igrzyska.medale.structures.Zespol;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +54,10 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private Button removeKraj;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button rollbackButton;
     @FXML
     private Button removeDyscyplina;
     @FXML
@@ -110,7 +115,7 @@ public class FXMLDocumentController implements Initializable {
         System.out.println("You clicked me!");
     }
     
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
                 
@@ -173,13 +178,26 @@ public class FXMLDocumentController implements Initializable {
                 }
         });
         
+        iv = assignIV(saveButton, "src/save.png");
+        saveButton.setGraphic(iv);
+        saveButton.setOnAction((event) -> {
+           igrzyska.save();
+        });
+        
+        iv = assignIV(rollbackButton, "src/rollback.png");
+        rollbackButton.setGraphic(iv);
+        rollbackButton.setOnAction((event) -> {
+           igrzyska.rollback();
+           refreshView();
+        });
+        
         iv = assignIV(removeDyscyplina, "src/sport.png");
         medaleButton.setGraphic(iv);
         
         iv = assignIV(removeZawodnik, "src/delete.png");
         removeZawodnik.setGraphic(iv);
         removeZawodnik.setOnAction((event) -> {
-            igrzyska.usunZawodnika(osobyTable.getId().get(igrzyska.getSelectedStuff().getZawodnik().getId()));
+            igrzyska.usunZawodnika(osobyTable.getId().get(osoby.getSelectionModel().selectedIndexProperty().getValue()));
             refreshView();
         }); 
         
@@ -246,18 +264,28 @@ public class FXMLDocumentController implements Initializable {
         osoby.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
         @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(newValue != null){
+                if(newValue != null && !showZespoly){
                     int i = osoby.getSelectionModel().getSelectedIndex();
                     Zawodnik z = igrzyska.getZawodnik(osobyTable.getId().get(i));
                     imie.setText(z.getImie());
                     nazwisko.setText(z.getNazwisko());
-                    data.setText(z.getDataUr());
+                    data.setText(z.getDataUr()==null?"brak danych": z.getDataUr());
                     kraj.setText(z.getKraj());
                     igrzyska.getSelectedStuff().setZawodnik(z);
+                }
+                else if(newValue != null && showZespoly){
+                    int i = osoby.getSelectionModel().getSelectedIndex();
+                    Zespol z = igrzyska.getZespol(zespolyTable.getId().get(i));
+                    imie.setText("Rep. : " + z.getKraj());
+                    nazwisko.setText(z.getDyscyplina());
+                    igrzyska.getSelectedStuff().setZespol(z);
                 }
             }
         });
       
+        
+        iv = assignIV(dMedalButton, "src/dodajmedal.png");
+        dMedalButton.setGraphic(iv);
         dMedalButton.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();
@@ -277,6 +305,8 @@ public class FXMLDocumentController implements Initializable {
             }
         });   
         
+        iv = assignIV(buttonNZawodnik, "src/dodajzawodnika.png");
+        buttonNZawodnik.setGraphic(iv);
         buttonNZawodnik.setOnAction((event) -> {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader();

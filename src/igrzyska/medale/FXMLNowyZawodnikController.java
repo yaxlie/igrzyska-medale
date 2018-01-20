@@ -44,11 +44,7 @@ public class FXMLNowyZawodnikController implements Initializable {
     @FXML
     protected TextField tDyscyplina;
     @FXML
-    protected TextField tTrener;
-    @FXML
-    protected Slider slider;
-    @FXML
-    protected Label ocena;
+    protected TextField tData;
     @FXML
     protected CheckBox zespol;
     
@@ -62,14 +58,13 @@ public class FXMLNowyZawodnikController implements Initializable {
         tKraj.setText(igrzyska.getSelectedStuff().getKraj());
         tDyscyplina.setText(igrzyska.getSelectedStuff().getDyscyplina());
         bDodaj.setOnAction((event) -> {
-            igrzyska.dodajZawodnikaProcedure(tImie.getText(), tNazwisko.getText(), null, 0, tKraj.getText(),
-                    tDyscyplina.getText(), zespol.isSelected()?tKraj.getText():null, Float.parseFloat(ocena.getText()));
+            igrzyska.dodajZawodnikaProcedure(tImie.getText(), tNazwisko.getText(), tData.getText(), 0, tKraj.getText(),
+                    tDyscyplina.getText(), zespol.isSelected()?tKraj.getText():null, 0);
             igrzyska.getMainWindow().refreshView();
             Stage stage = (Stage) bDodaj.getScene().getWindow();
             stage.close();
         }); 
         
-        TextFields.bindAutoCompletion(tTrener, igrzyska.getOsoby("trener"));
         TextFields.bindAutoCompletion(tDyscyplina, igrzyska.getDyscypliny());
         TextFields.bindAutoCompletion(tKraj, igrzyska.getKrajList());
         

@@ -49,28 +49,37 @@ public class FXMLMedalController implements Initializable {
     @FXML
     private void handleOkButton() {
         try{
-            String[] parts = cbZloto.getText().split("\\,");
-            zlotoId = Integer.parseInt(parts[0]);
+            String[] parts;
+            if(cbSrebro.getText() != ""){
+                parts = cbZloto.getText().split("\\,");
+                zlotoId = Integer.parseInt(parts[0]);
+            }
 
-            parts = cbSrebro.getText().split("\\,");
-            srebroId = Integer.parseInt(parts[0]);
+            if(cbSrebro.getText() != ""){
+                parts = cbSrebro.getText().split("\\,");
+                srebroId = Integer.parseInt(parts[0]);
+            }
 
-            parts = cbBraz.getText().split("\\,");
-            brazId = Integer.parseInt(parts[0]);
+            if(cbSrebro.getText() != ""){
+                parts = cbBraz.getText().split("\\,");
+                brazId = Integer.parseInt(parts[0]);
+            }
         }catch(Exception e){
             
         }
-        if(igrzyska.getZawodnik(zlotoId)!=null && igrzyska.getZawodnik(srebroId)!=null && 
-                igrzyska.getZawodnik(brazId)!=null && !"".equals(cbDysc.getText())){
-            if(!igrzyska.existDyscyplina(cbDysc.getText()))
-                igrzyska.dodajDyscypline(cbDysc.getText(), null, null);
+        
+        if(!igrzyska.existDyscyplina(cbDysc.getText()))
+            igrzyska.dodajDyscypline(cbDysc.getText(), null, null);
+        if(igrzyska.getZawodnik(zlotoId)!=null)
             igrzyska.dodajMedal("ZŁOTO", 0, zlotoId, cbDysc.getText(), null);
+        if(igrzyska.getZawodnik(srebroId)!=null)
             igrzyska.dodajMedal("SREBRO", 0, srebroId, cbDysc.getText(), null);
+        if(igrzyska.getZawodnik(brazId)!=null)
             igrzyska.dodajMedal("BRĄZ", 0, brazId, cbDysc.getText(), null);
-            igrzyska.getMainWindow().refreshView();
-            Stage stage = (Stage) cbSrebro.getScene().getWindow();
-            stage.close();
-        }
+        
+        igrzyska.getMainWindow().refreshView();
+        Stage stage = (Stage) cbSrebro.getScene().getWindow();
+        stage.close();
     }
     
     @FXML

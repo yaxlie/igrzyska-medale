@@ -36,10 +36,11 @@ public class FXMLModZawodnikController extends FXMLNowyZawodnikController{
         tImie.setText(z.getImie());
         tNazwisko.setText(z.getNazwisko());
         tKraj.setText(z.getKraj());
+        tData.setText(z.getDataUr());
         tDyscyplina.setText(z.getDyscyplina());
         bDodaj.setOnAction((event) -> {
             igrzyska.updateZawodnik(z.getId(), tImie.getText(), tNazwisko.getText(), 
-                    zespol.isSelected()?tKraj.getText():null, 0, tDyscyplina.getText(), tKraj.getText(), "");
+                    zespol.isSelected()?tKraj.getText():null, 0, tDyscyplina.getText(), tKraj.getText(), tData.getText());
             igrzyska.getMainWindow().refreshView();
             Stage stage = (Stage) bDodaj.getScene().getWindow();
             stage.close();

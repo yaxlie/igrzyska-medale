@@ -6,6 +6,7 @@
 package igrzyska.medale;
 
 import igrzyska.medale.structures.Zawodnik;
+import igrzyska.medale.structures.Zespol;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -53,7 +54,32 @@ public class IgrzyskaSingleton {
         
         connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe",
         connectionProps);
+        connection.setAutoCommit(false);
         System.out.println("Połączono z bazą danych");
+   }
+   
+   public void save(){
+        try {
+               connection.commit();
+       } catch (SQLException ex) {
+           Logger.getLogger(IgrzyskaSingleton.class.getName()).log(Level.SEVERE, null, ex);
+       }
+   }
+   
+   public void rollback(){
+       try {
+           connection.rollback();
+       } catch (SQLException ex) {
+           Logger.getLogger(IgrzyskaSingleton.class.getName()).log(Level.SEVERE, null, ex);
+       }
+   }
+   
+   public void disconnect(){
+       try {
+           connection.close();
+       } catch (SQLException ex) {
+           Logger.getLogger(IgrzyskaSingleton.class.getName()).log(Level.SEVERE, null, ex);
+       }
    }
    
    public static IgrzyskaSingleton getInstance() {
@@ -319,12 +345,20 @@ public class IgrzyskaSingleton {
             stmt = connection.createStatement();
             rs = stmt.executeQuery("select id_zaw, imię, nazwisko, ocena, kraj, data_ur, dyscyplina, Trener_id_tren from " + adm + "zawodnik where id_zaw = " + id);
             while (rs.next()) {
+                String data = rs.getString(6);
+                if(data != null){
+                    data = data.split(" ")[0];
+                    String[] d = data.split("-");
+                    data = d[2] + "-" + d[1] + "-" + d[0];
+                }
+                else
+                    data = "";
                 zawodnik = new Zawodnik(
                         rs.getInt(1),
                         rs.getString(2),
                         rs.getString(3),
                         rs.getString(5),
-                        rs.getString(6),
+                        data,
                         rs.getFloat(4),
                         rs.getString(7),
                         rs.getInt(8));
@@ -346,6 +380,39 @@ public class IgrzyskaSingleton {
         return zawodnik;
    }
    
+      public Zespol getZespol(int id){
+        Zespol zespol = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = connection.createStatement();
+            rs = stmt.executeQuery("select numer, kraj_nazwa, Dyscyplina_nazwa, kapitan_id, trener_id_tren from " 
+                    + adm + "zespół where numer = " + id);
+            while (rs.next()) {
+                zespol = new Zespol(
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getInt(4),
+                        rs.getInt(5));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return zespol;
+   }
+   
    
    public void dodajZawodnika(String imie, String nazwisko, String zespol, String ocena, String idTrenera, 
            String dyscyplina, String kraj, String data){
@@ -355,7 +422,8 @@ public class IgrzyskaSingleton {
             int changes;
             String val = "(null, " + modTextNull(imie) + ", " + modTextNull(nazwisko) + ", " + modTextNull(zespol) + ", " 
                     + modText(ocena) + ", " + modText(idTrenera) + 
-                    ", " + modTextNull(dyscyplina) + ", " + modTextNull(kraj) + ", " + modTextNull(data) + ")" ;
+                    ", " + modTextNull(dyscyplina) + ", " + modTextNull(kraj) + ", " 
+                    + data==""? null: "TO_DATE('" + data + "', 'dd-mm-yyyy')";
             changes = stmt.executeUpdate("INSERT INTO "+adm+"zawodnik VALUES" + val);
             System.out.println("Wstawiono " + changes + " krotek."); 
         } catch (SQLException ex) {
@@ -377,7 +445,7 @@ public class IgrzyskaSingleton {
             String val = "imię = " + modTextNull(imie) + ", nazwisko = " + modTextNull(nazwisko) + 
                     ", Zespół_numer = " + modTextNull(zespol) +  ", Trener_id_tren = null" //+ idTrenera  
                     + ", dyscyplina = " + modTextNull(dyscyplina) + ", kraj = " + modTextNull(kraj) 
-                    + ", data_ur = " + modTextNull(data) ;
+                    + ", data_ur = " + "to_date('" + data + "', 'dd-mm-yyyy')" ;
             stmt.executeUpdate("Update "+adm+"zawodnik set " + val + " where id_zaw = " + id);
         } catch (SQLException ex) {
             System.out.println("Bład wykonania polecenia" + ex.toString());

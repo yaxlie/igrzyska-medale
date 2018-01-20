@@ -6,6 +6,7 @@
 package igrzyska.medale;
 
 import igrzyska.medale.structures.Zawodnik;
+import igrzyska.medale.structures.Zespol;
 
 /**
  *
@@ -14,7 +15,7 @@ import igrzyska.medale.structures.Zawodnik;
 public class SelectedStuff {
     private String kraj = null;
     private String dyscyplina = null;
-    private int zespol;
+    private Zespol zespol;
     private Zawodnik zawodnik;
     private int trener;
     private int medal;
@@ -59,11 +60,11 @@ public class SelectedStuff {
         this.medal = medal;
     }
 
-    public int getZespol() {
+    public Zespol getZespol() {
         return zespol;
     }
 
-    public void setZespol(int zespol) {
+    public void setZespol(Zespol zespol) {
         this.zespol = zespol;
     }
     

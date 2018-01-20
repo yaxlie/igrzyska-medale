@@ -70,7 +70,7 @@ public class FXMLLoginController implements Initializable {
                         stage.setScene(scene);
                         stage.setTitle("Tokio 2020");
                         stage.show();  
-                        
+                        stage.setOnHiding( event -> {igrzyska.disconnect();} );
                         stage = (Stage) button.getScene().getWindow();
                         stage.close();
                         
