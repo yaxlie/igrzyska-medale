@@ -7,18 +7,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="405.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLMedalController">
+<AnchorPane id="AnchorPane" prefHeight="299.0" prefWidth="344.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLMedalController">
   <children>
-    <SplitMenuButton layoutX="78.0" layoutY="232.0" mnemonicParsing="false" prefWidth="189.0" text="Data">
-      <items>
-        <MenuItem mnemonicParsing="false" text="Action 1" />
-        <MenuItem mnemonicParsing="false" text="Action 2" />
-      </items>
-    </SplitMenuButton>
-    <Button layoutX="144.0" layoutY="314.0" mnemonicParsing="false" onMouseClicked="#handleOkButton" text="OK" />
-    <TextField id="cb" fx:id="cbDysc" layoutX="14.0" layoutY="31.0" prefWidth="316.0" promptText="(podaj dyscyplinę)" />
-    <TextField id="c" fx:id="cbZloto" layoutX="14.0" layoutY="101.0" prefWidth="316.0" promptText="(podaj zawodnika) ZŁOTO" />
-    <TextField fx:id="cbSrebro" layoutX="14.0" layoutY="133.0" prefWidth="316.0" promptText="(podaj zawodnika) SREBRO" />
-    <TextField fx:id="cbBraz" layoutX="14.0" layoutY="164.0" prefWidth="316.0" promptText="(podaj zawodnika) BRĄZ" />
+    <Button layoutX="144.0" layoutY="235.0" mnemonicParsing="false" onMouseClicked="#handleOkButton" text="OK" />
+    <TextField id="cb" fx:id="cbDysc" layoutX="14.0" layoutY="80.0" prefWidth="316.0" promptText="(podaj dyscyplinę)" />
+    <TextField id="c" fx:id="cbZloto" layoutX="14.0" layoutY="118.0" prefWidth="316.0" promptText="(podaj zawodnika) ZŁOTO" />
+    <TextField fx:id="cbSrebro" layoutX="14.0" layoutY="150.0" prefWidth="316.0" promptText="(podaj zawodnika) SREBRO" />
+    <TextField fx:id="cbBraz" layoutX="14.0" layoutY="181.0" prefWidth="316.0" promptText="(podaj zawodnika) BRĄZ" />
+    <Button fx:id="changeZZButton" layoutX="155.0" layoutY="23.0" maxHeight="35.0" maxWidth="35.0" minHeight="35.0" minWidth="35.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="35.0" text="" />
+    <TextField id="c" fx:id="cbZlotoZ" layoutX="14.0" layoutY="118.0" prefWidth="316.0" promptText="(podaj zespół) ZŁOTO" />
+    <TextField id="cbSrebro" fx:id="cbSrebroZ" layoutX="14.0" layoutY="150.0" prefWidth="316.0" promptText="(podaj zespół) SREBRO" />
+    <TextField id="cbBraz" fx:id="cbBrazZ" layoutX="14.0" layoutY="181.0" prefWidth="316.0" promptText="(podaj zespół) BRĄZ" />
   </children>
 </AnchorPane>

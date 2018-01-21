@@ -11,7 +11,7 @@
     <Button fx:id="bDodaj" layoutX="109.0" layoutY="225.0" mnemonicParsing="false" text="OK" />
     <TextField fx:id="tImie" layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="imię" />
     <TextField fx:id="tNazwisko" layoutX="14.0" layoutY="42.0" prefWidth="200.0" promptText="nazwisko" />
-    <TextField fx:id="tData" layoutX="14.0" layoutY="71.0" prefWidth="200.0" promptText="data urodzenia" />
+    <TextField fx:id="tData" layoutX="14.0" layoutY="71.0" prefWidth="200.0" promptText="data urodzenia (dd-mm-yyyy)" />
     <TextField fx:id="tKraj" layoutX="14.0" layoutY="102.0" prefWidth="200.0" promptText="kraj" />
     <TextField fx:id="tDyscyplina" layoutX="14.0" layoutY="135.0" prefWidth="200.0" promptText="dyscyplina" />
     <CheckBox fx:id="zespol" contentDisplay="LEFT" layoutX="78.0" layoutY="179.0" mnemonicParsing="false" text="Gra w zespole?" textAlignment="LEFT" />

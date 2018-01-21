@@ -266,10 +266,12 @@ public class IgrzyskaSingleton {
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_zaw, imię, nazwisko from " + adm + type + " where kraj like " 
-                +modText(country)+" and dyscyplina like "+modText(dyscyplina));
+            rs = stmt.executeQuery("select id_zaw, imię, nazwisko, count(NVL(id_med, null)) as medale from " + adm + type +
+                    " z left join " + adm + "medal med on (z.ID_ZAW = med.ZAWODNIK_ID_ZAW) where kraj like " 
+                    +modText(country)+" and z.dyscyplina like "+modText(dyscyplina) + 
+                    " group by z.id_zaw, imię, nazwisko order by medale desc");
             while (rs.next()) {
-                String nazwa = rs.getString(2) + " " + rs.getString(3);
+                String nazwa = rs.getString(2) + " " + rs.getString(3) + " <" + Integer.toString(rs.getInt(4)) + ">";
                 osoby.getArray().add(nazwa);
                 osoby.getId().add(rs.getInt(1));
             }
@@ -289,17 +291,29 @@ public class IgrzyskaSingleton {
         }
         return osoby;
    }
-   
+    public TableArray getZespoly(){
+        return getZespoly("", "", true);
+    }
     public TableArray getZespoly(String country, String dyscyplina){
+        return getZespoly(country, dyscyplina, false);
+    }
+    
+    public TableArray getZespoly(String country, String dyscyplina, boolean writeId){
         TableArray zespoly = new TableArray();
         Statement stmt = null;
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select numer, kraj_nazwa, dyscyplina_nazwa from " + adm + "zespół" + " where kraj_nazwa like " 
-                +modText(country)+" and dyscyplina_nazwa like "+modText(dyscyplina));
+            rs = stmt.executeQuery("select numer, kraj_nazwa, dyscyplina_nazwa, count(NVL(id_med, null)) as medale from " + adm + "zespół" +
+                    " z left join " + adm + "medal med on (z.numer = med.zespół_numer) where kraj_nazwa like " 
+                    +modText(country)+" and z.dyscyplina_nazwa like "+modText(dyscyplina) + 
+                    " group by z.numer, kraj_nazwa, dyscyplina_nazwa order by medale desc");
+            
             while (rs.next()) {
-                String nazwa = rs.getString(2) + " : " + rs.getString(3);
+                String nazwa = writeId?
+                        Integer.toString(rs.getInt(1)) + ", " +
+                        rs.getString(2) + " : " + rs.getString(3) + " <" + Integer.toString(rs.getInt(4)) + ">":
+                        rs.getString(2) + " : " + rs.getString(3) + " <" + Integer.toString(rs.getInt(4)) + ">";
                 zespoly.getArray().add(nazwa);
                 zespoly.getId().add(rs.getInt(1));
             }
@@ -539,8 +553,9 @@ public class IgrzyskaSingleton {
         try {
             stmt = connection.createStatement();
             rs = stmt.executeQuery("select count (*) from " + adm + "medal where"
-                    + "(select kraj from " + adm + "zawodnik where id_zaw = ZAWODNIK_ID_ZAW) like " + modText(kraj) +
-                    " and DYSCYPLINA like " + modText(dyscyplina) +
+                    + "((select kraj from " + adm + "zawodnik where id_zaw = ZAWODNIK_ID_ZAW) like " + modText(kraj)
+                    + "or" + "(select kraj_nazwa from " + adm + "zespół where numer = zespół_numer) like " + modText(kraj)+")"
+                    + " and DYSCYPLINA like " + modText(dyscyplina) +
                     " and KOLOR like " + modText(kolor));
             while (rs.next()) {
                 c = rs.getInt(1);
@@ -562,7 +577,8 @@ public class IgrzyskaSingleton {
         return c;
    }
    
-    public void dodajMedal(String kolor, int id_zesp, int id_zaw, String dysc, String data){
+    public void dodajMedal(String kolor, int id_zesp, int id_zaw, String dysc, String data){ 
+        System.out.println("Procedura dodawania medali zesp:" + id_zesp +" zaw:" +  id_zaw);
         try {
             CallableStatement stmt = connection.prepareCall("{call dodaj_medal(?,?,?,?,?)}");
             stmt.setString(1, kolor);
@@ -578,7 +594,7 @@ public class IgrzyskaSingleton {
             stmt.setString(5, data);
             stmt.execute();
             stmt.close(); 
-
+           
         } catch (SQLException ex) {
             System.out.println("Bład wykonania polecenia" + ex.toString());
         }   
@@ -623,13 +639,19 @@ public class IgrzyskaSingleton {
        return score;
     } 
     
-       public TableArray getMedale(int id_zaw){
+    public TableArray getMedale(int id_zaw){
+        return getMedale(id_zaw, false);
+    }
+    public TableArray getMedale(int id_zaw, boolean zespoly){
         TableArray medale = new TableArray();
         Statement stmt = null;
         ResultSet rs = null;
         try {
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("select id_med, kolor, dyscyplina, data_wręczenia from " + adm + "medal where zawodnik_id_zaw"
+            rs = zespoly?
+                    stmt.executeQuery("select id_med, kolor, dyscyplina, data_wręczenia from " + adm + "medal where zespół_numer"
+                    + " = " + Integer.toString(id_zaw)):
+                    stmt.executeQuery("select id_med, kolor, dyscyplina, data_wręczenia from " + adm + "medal where zawodnik_id_zaw"
                     + " = " + Integer.toString(id_zaw));
             while (rs.next()) {
                 String s = "<<" + rs.getString(2)+ ">>" + " (" + rs.getString(3) + ")     " + rs.getString(4).split(" ")[0];

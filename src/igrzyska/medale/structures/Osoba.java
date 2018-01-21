@@ -15,6 +15,7 @@ public class Osoba {
     private String nazwisko;
     private String kraj;
     private String dataUr;
+    private int liczbaMedali;
     
     public Osoba(int id, String imie, String nazwisko, String kraj, String dataUr){
         this.id = id;
@@ -62,6 +63,14 @@ public class Osoba {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getLiczbaMedali() {
+        return liczbaMedali;
+    }
+
+    public void setLiczbaMedali(int liczbaMedali) {
+        this.liczbaMedali = liczbaMedali;
     }
     
     

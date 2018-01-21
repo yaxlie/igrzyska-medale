@@ -214,9 +214,16 @@ public class FXMLDocumentController implements Initializable {
                     Parent root = (Parent)fxmlLoader.load(); 
                     
                     FXMLMedaleController controller = fxmlLoader.<FXMLMedaleController>getController();
-                    controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZawodnik().getId()));
-                    controller.getLabel().setText(igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
+                    if(!showZespoly){
+                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZawodnik().getId()));
+                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
                             +igrzyska.getSelectedStuff().getZawodnik().getNazwisko());
+                    }
+                    else{
+                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZespol().getNumer(),true));
+                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZespol().getKraj()+ ": " 
+                            +igrzyska.getSelectedStuff().getZespol().getDyscyplina());
+                    }
                     
                     Scene scene = new Scene(root);
                     Stage stage = new Stage();
