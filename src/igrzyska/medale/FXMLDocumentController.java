@@ -34,6 +34,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import layouts.FXMLLoginController;
 import layouts.FXMLMedaleController;
@@ -51,6 +52,12 @@ public class FXMLDocumentController implements Initializable {
     private ImageView ivTeam;
     private ImageView ivUser;
     private ImageView ivDelete;
+
+    
+    @FXML
+    private Label labelError;
+    @FXML
+    private Label labelInfo;
     
     @FXML
     private Button removeKraj;
@@ -124,35 +131,35 @@ public class FXMLDocumentController implements Initializable {
         countries.setItems(krajeList);
         showZespoly = false;
         
-        File file = new File("src/gold.png");
+        File file = new File("res\\gold.png");
         Image image = new Image(file.toURI().toString());
         iGold.setImage(image);
         
-        file = new File("src/silver.png");
+        file = new File("res\\silver.png");
         image = new Image(file.toURI().toString());
         iSilver.setImage(image);
         
-        file = new File("src/bronze.png");
+        file = new File("res\\bronze.png");
         image = new Image(file.toURI().toString());
         iBronze.setImage(image);
         
-        ImageView iv = assignIV(refreshButton, "src/refresh.png");
+        ImageView iv = assignIV(refreshButton, "res\\refresh.png");
         refreshButton.setGraphic(iv);
         
-        ivTeam = assignIV(changeZZButton, "src/team.png");
-        ivUser = assignIV(changeZZButton, "src/user.png");
+        ivTeam = assignIV(changeZZButton, "res\\team.png");
+        ivUser = assignIV(changeZZButton, "res\\user.png");
         
-        iv = assignIV(removeKraj, "src/delete.png");
+        iv = assignIV(removeKraj, "res\\delete.png");
         removeKraj.setGraphic(iv);
         removeKraj.setOnAction((event) -> {
             igrzyska.usunKraj(igrzyska.getSelectedStuff().getKraj());
             refreshView();
         }); 
         
-        iv = assignIV(removeDyscyplina, "src/delete.png");
+        iv = assignIV(removeDyscyplina, "res\\delete.png");
         removeDyscyplina.setGraphic(iv);
         
-        iv = assignIV(removeDyscyplina, "src/edit.png");
+        iv = assignIV(removeDyscyplina, "res\\edit.png");
         modButton.setGraphic(iv);
         
         modButton.setOnAction((event) -> {
@@ -178,26 +185,29 @@ public class FXMLDocumentController implements Initializable {
                 }
         });
         
-        iv = assignIV(saveButton, "src/save.png");
+        iv = assignIV(saveButton, "res\\save.png");
         saveButton.setGraphic(iv);
         saveButton.setOnAction((event) -> {
            igrzyska.save();
         });
         
-        iv = assignIV(rollbackButton, "src/rollback.png");
+        iv = assignIV(rollbackButton, "res\\rollback.png");
         rollbackButton.setGraphic(iv);
         rollbackButton.setOnAction((event) -> {
            igrzyska.rollback();
            refreshView();
         });
         
-        iv = assignIV(removeDyscyplina, "src/sport.png");
+        iv = assignIV(removeDyscyplina, "res\\sport.png");
         medaleButton.setGraphic(iv);
         
-        iv = assignIV(removeZawodnik, "src/delete.png");
+        iv = assignIV(removeZawodnik, "res\\delete.png");
         removeZawodnik.setGraphic(iv);
         removeZawodnik.setOnAction((event) -> {
-            igrzyska.usunZawodnika(osobyTable.getId().get(osoby.getSelectionModel().selectedIndexProperty().getValue()));
+            if(!showZespoly)
+                igrzyska.usunZawodnika(osobyTable.getId().get(osoby.getSelectionModel().selectedIndexProperty().getValue()));
+            else
+                igrzyska.usunZespol(zespolyTable.getId().get(osoby.getSelectionModel().selectedIndexProperty().getValue()));
             refreshView();
         }); 
         
@@ -207,34 +217,21 @@ public class FXMLDocumentController implements Initializable {
             refreshView();
         }); 
         
+    osoby.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+        @Override
+        public void handle(MouseEvent click) {
+            if (click.getClickCount() == 2) {
+               //Use ListView's getSelected Item
+               int currentItemSelected = osoby.getSelectionModel().getSelectedIndex();
+               showmedal();
+            }
+        }
+    });
+
+        
         medaleButton.setOnAction((event) -> {
-            try {     
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/layouts/FXMLMedale.fxml"));  
-                    
-                    Parent root = (Parent)fxmlLoader.load(); 
-                    
-                    FXMLMedaleController controller = fxmlLoader.<FXMLMedaleController>getController();
-                    if(!showZespoly){
-                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZawodnik().getId()));
-                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
-                            +igrzyska.getSelectedStuff().getZawodnik().getNazwisko());
-                    }
-                    else{
-                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZespol().getNumer(),true));
-                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZespol().getKraj()+ ": " 
-                            +igrzyska.getSelectedStuff().getZespol().getDyscyplina());
-                    }
-                    
-                    Scene scene = new Scene(root);
-                    Stage stage = new Stage();
-                    stage.setScene(scene);
-                    stage.setTitle("Medale Zawodnika/Reprezentacji");
-                    stage.show();  
-                    stage.show();  
-                        
-                } catch (IOException ex) {
-                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            showmedal();
         }); 
         
         changeZZButton.setGraphic(ivTeam);
@@ -262,8 +259,10 @@ public class FXMLDocumentController implements Initializable {
         cbDyscyplina.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                try{
                 igrzyska.getSelectedStuff().setDyscyplina(dyscyplinyList.get(newValue.intValue()));
-                refreshView();
+                //refreshView();
+                }catch(Exception e){}
             }
 
         });
@@ -291,7 +290,7 @@ public class FXMLDocumentController implements Initializable {
         });
       
         
-        iv = assignIV(dMedalButton, "src/dodajmedal.png");
+        iv = assignIV(dMedalButton, "res\\dodajmedal.png");
         dMedalButton.setGraphic(iv);
         dMedalButton.setOnAction((event) -> {
             try {
@@ -312,7 +311,7 @@ public class FXMLDocumentController implements Initializable {
             }
         });   
         
-        iv = assignIV(buttonNZawodnik, "src/dodajzawodnika.png");
+        iv = assignIV(buttonNZawodnik, "res\\dodajzawodnika.png");
         buttonNZawodnik.setGraphic(iv);
         buttonNZawodnik.setOnAction((event) -> {
             try {
@@ -382,8 +381,41 @@ public class FXMLDocumentController implements Initializable {
         
         countries.setItems(krajeList);
     }
+    
+    private void showmedal(){
+        try {     
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/layouts/FXMLMedale.fxml"));  
+                    
+                    Parent root = (Parent)fxmlLoader.load(); 
+                    
+                    FXMLMedaleController controller = fxmlLoader.<FXMLMedaleController>getController();
+                    if(!showZespoly){
+                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZawodnik().getId()));
+                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZawodnik().getImie() + " " 
+                            +igrzyska.getSelectedStuff().getZawodnik().getNazwisko());
+                    }
+                    else{
+                        controller.setMedaleTable(igrzyska.getMedale(igrzyska.getSelectedStuff().getZespol().getNumer(),true));
+                        controller.getLabel().setText(igrzyska.getSelectedStuff().getZespol().getKraj()+ ": " 
+                            +igrzyska.getSelectedStuff().getZespol().getDyscyplina());
+                    }
+                    
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.setTitle("Medale Zawodnika/Reprezentacji");
+                    stage.show();  
+                    stage.show();  
+                        
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+    }
     public void refreshView(){
         setKrajeList();
+        
+        labelError.setText(igrzyska.getErrorText());
+        labelInfo.setText(igrzyska.getInfoText());
         
         countries.setItems(krajeList);
         
@@ -430,6 +462,9 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void reset(){
+        igrzyska.setErrorText("");
+        igrzyska.setInfoText("");
+        
         countries.getSelectionModel().clearSelection();
         cbDyscyplina.getSelectionModel().clearSelection();
         dyscyplinyList = FXCollections.observableArrayList(igrzyska.getDyscypliny());

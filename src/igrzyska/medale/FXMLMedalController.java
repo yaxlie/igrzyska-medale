@@ -59,8 +59,8 @@ public class FXMLMedalController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         zespoly = false;
-        ivTeam = assignIV(changeZZButton, "src/team.png");
-        ivUser = assignIV(changeZZButton, "src/user.png");
+        ivTeam = assignIV(changeZZButton, "res\\team.png");
+        ivUser = assignIV(changeZZButton, "res\\user.png");
         
         refresh();
         
@@ -110,31 +110,38 @@ public class FXMLMedalController implements Initializable {
         }
         catch(Exception e){}
         
+        boolean b = false;
         
         if(!zespoly){
-            if(!igrzyska.existDyscyplina(cbDysc.getText()))
+            if(!igrzyska.existDyscyplina(cbDysc.getText().replace(" ", "")))
                 igrzyska.dodajDyscypline(cbDysc.getText(), null, null);
             if(igrzyska.getZawodnik(zlotoId)!=null)
-                igrzyska.dodajMedal("ZŁOTO", 0, zlotoId, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("ZŁOTO", 0, zlotoId, cbDysc.getText(), null);
             if(igrzyska.getZawodnik(srebroId)!=null)
-                igrzyska.dodajMedal("SREBRO", 0, srebroId, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("SREBRO", 0, srebroId, cbDysc.getText(), null);
             if(igrzyska.getZawodnik(brazId)!=null)
-                igrzyska.dodajMedal("BRĄZ", 0, brazId, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("BRĄZ", 0, brazId, cbDysc.getText(), null);
         }
         else{
-            if(!igrzyska.existDyscyplina(cbDysc.getText()))
+            if(!igrzyska.existDyscyplina(cbDysc.getText().replace(" ", "")))
                 igrzyska.dodajDyscypline(cbDysc.getText(), null, null);
             if(igrzyska.getZespol(zlotoId)!=null)
-                igrzyska.dodajMedal("ZŁOTO", zlotoId, 0, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("ZŁOTO", zlotoId, 0, cbDysc.getText(), null);
             if(igrzyska.getZespol(srebroId)!=null)
-                igrzyska.dodajMedal("SREBRO", srebroId, 0, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("SREBRO", srebroId, 0, cbDysc.getText(), null);
             if(igrzyska.getZespol(brazId)!=null)
-                igrzyska.dodajMedal("BRĄZ", brazId, 0, cbDysc.getText(), null);
+                b = igrzyska.dodajMedal("BRĄZ", brazId, 0, cbDysc.getText(), null);
         }
-        
         igrzyska.getMainWindow().refreshView();
-        Stage stage = (Stage) cbSrebro.getScene().getWindow();
-        stage.close();
+        if(b){
+            //igrzyska.getMainWindow().refreshView();
+            Stage stage = (Stage) cbSrebro.getScene().getWindow();
+            stage.close();
+        }
+        else{
+            igrzyska.setErrorText("Bład: Czy zawodnik został prawidłowo wprowadzony?"); 
+            igrzyska.getMainWindow().refreshView();
+        }
     }
     
     @FXML

@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import java.util.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -11,9 +12,35 @@
     <Button fx:id="bDodaj" layoutX="109.0" layoutY="225.0" mnemonicParsing="false" text="OK" />
     <TextField fx:id="tImie" layoutX="14.0" layoutY="14.0" prefWidth="200.0" promptText="imię" />
     <TextField fx:id="tNazwisko" layoutX="14.0" layoutY="42.0" prefWidth="200.0" promptText="nazwisko" />
-    <TextField fx:id="tData" layoutX="14.0" layoutY="71.0" prefWidth="200.0" promptText="data urodzenia (dd-mm-yyyy)" />
-    <TextField fx:id="tKraj" layoutX="14.0" layoutY="102.0" prefWidth="200.0" promptText="kraj" />
-    <TextField fx:id="tDyscyplina" layoutX="14.0" layoutY="135.0" prefWidth="200.0" promptText="dyscyplina" />
+    <TextField fx:id="tKraj" layoutX="14.0" layoutY="119.0" prefWidth="200.0" promptText="kraj" />
+    <TextField fx:id="tDyscyplina" layoutX="14.0" layoutY="147.0" prefWidth="200.0" promptText="dyscyplina" />
     <CheckBox fx:id="zespol" contentDisplay="LEFT" layoutX="78.0" layoutY="179.0" mnemonicParsing="false" text="Gra w zespole?" textAlignment="LEFT" />
+    <ComboBox fx:id="cbDzien" layoutX="14.0" layoutY="86.0" minWidth="37.0" prefHeight="21.0" prefWidth="50.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox fx:id="cbMiesiac" layoutX="69.0" layoutY="86.0" minWidth="37.0" prefHeight="21.0" prefWidth="50.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <ComboBox fx:id="cbRok" layoutX="127.0" layoutY="86.0" prefHeight="21.0" prefWidth="79.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
   </children>
 </AnchorPane>

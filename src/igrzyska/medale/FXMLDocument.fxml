@@ -7,8 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" minWidth="402.0" prefHeight="552.9998779296875" prefWidth="422.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLDocumentController">
+<AnchorPane id="AnchorPane" minWidth="402.0" prefHeight="598.9998779296875" prefWidth="422.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="igrzyska.medale.FXMLDocumentController">
   <children>
     <Pane layoutX="13.0" layoutY="9.0" prefHeight="435.0" prefWidth="295.0">
       <children>
@@ -45,17 +46,23 @@
     <Pane layoutX="212.0" layoutY="161.0" prefHeight="270.0" prefWidth="200.0">
       <children>
         <ListView fx:id="osoby" layoutX="12.0" layoutY="35.0" prefHeight="235.0" prefWidth="176.99997792968497" />
-        <Button fx:id="changeZZButton" layoutX="140.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
-        <Button id="changeZZButton" fx:id="removeZawodnik" layoutX="110.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
-        <Button id="changeZZButton" fx:id="medaleButton" layoutX="50.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
-        <Button id="changeZZButton" fx:id="modButton" layoutX="80.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
+        <Button id="changeZZButton" fx:id="removeZawodnik" layoutX="121.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
+        <Button id="changeZZButton" fx:id="medaleButton" layoutX="61.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
+        <Button id="changeZZButton" fx:id="modButton" layoutX="91.0" layoutY="6.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
       </children>
     </Pane>
     <Button fx:id="dMedalButton" layoutX="184.0" layoutY="494.0" maxHeight="40.0" maxWidth="40.0" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="" />
-    <Button fx:id="buttonNZawodnik" layoutX="300.0" layoutY="437.0" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="" />
+    <Button fx:id="buttonNZawodnik" layoutX="287.0" layoutY="437.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="" />
     <Button fx:id="refreshButton" layoutX="388.0" layoutY="9.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
     <Button id="changeZZButton" fx:id="removeKraj" layoutX="83.0" layoutY="444.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" text="" />
     <Button id="dMedalButton" fx:id="rollbackButton" layoutX="146.0" layoutY="499.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="" />
     <Button id="dMedalButton" fx:id="saveButton" layoutX="232.0" layoutY="499.0" maxHeight="30.0" maxWidth="30.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="" />
+    <Button fx:id="changeZZButton" layoutX="325.0" layoutY="440.0" maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="" />
+    <Label fx:id="labelError" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="543.0" prefHeight="49.0" prefWidth="399.0" text="" textAlignment="CENTER" textFill="RED">
+      <font>
+        <Font size="9.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label fx:id="labelInfo" alignment="CENTER" contentDisplay="CENTER" font="$x1" layoutX="9.0" layoutY="543.0" prefHeight="49.0" prefWidth="399.0" text="" textAlignment="CENTER" textFill="#009918" />
   </children>
 </AnchorPane>

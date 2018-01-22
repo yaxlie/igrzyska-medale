@@ -53,7 +53,7 @@ public class FXMLMedaleController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ImageView iv = assignIV(removeButton, "src/delete.png");
+        ImageView iv = assignIV(removeButton, "res\\delete.png");
         removeButton.setGraphic(iv);
         
         removeButton.setOnAction((event) -> {

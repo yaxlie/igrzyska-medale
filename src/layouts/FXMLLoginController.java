@@ -19,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -34,6 +35,9 @@ public class FXMLLoginController implements Initializable {
     
     @FXML
     private TextField loginField;
+    
+    @FXML
+    private Label infoLabel;
     
     @FXML
     private PasswordField passwordField;
@@ -56,10 +60,14 @@ public class FXMLLoginController implements Initializable {
     
     @FXML
     private void login(){
+        infoLabel.setText("");
+        boolean b = false;
             try {
-                igrzyska.connect(loginField.getText(), passwordField.getText());
+                igrzyska.connect(loginField.getText().replaceAll("[-+.^:,'\"*&^%$]",""), 
+                        passwordField.getText());
             } catch (SQLException ex) {
                 Logger.getLogger(FXMLLoginController.class.getName()).log(Level.SEVERE, null, ex);
+                infoLabel.setText("Błąd logowania, spróbuj ponownie \n" + ex.getMessage());
             }finally{
                 
                 try {

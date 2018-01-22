@@ -32,6 +32,9 @@ public class IgrzyskaSingleton {
    private String username = "";
    private String password = "";
    
+   private String infoText = "";
+   private String errorText = "";
+   
    private SelectedStuff selectedStuff;
    private ArrayList<String> krajList;
    
@@ -56,12 +59,17 @@ public class IgrzyskaSingleton {
         connectionProps);
         connection.setAutoCommit(false);
         System.out.println("Połączono z bazą danych");
+        setInfoText("Zalogowano pomyślnie.");
    }
    
    public void save(){
         try {
                connection.commit();
+               setInfoText("Zapisano bazę."); 
+               getMainWindow().refreshView();
        } catch (SQLException ex) {
+           setErrorText("Bład: " + ex.getLocalizedMessage()); 
+           getMainWindow().refreshView();
            Logger.getLogger(IgrzyskaSingleton.class.getName()).log(Level.SEVERE, null, ex);
        }
    }
@@ -69,10 +77,32 @@ public class IgrzyskaSingleton {
    public void rollback(){
        try {
            connection.rollback();
+           setErrorText("Cofnięto wprowadzone zmiany."); 
+           getMainWindow().refreshView();
        } catch (SQLException ex) {
+           setErrorText("Bład: " + ex.getLocalizedMessage()); 
+           getMainWindow().refreshView();
            Logger.getLogger(IgrzyskaSingleton.class.getName()).log(Level.SEVERE, null, ex);
        }
    }
+
+    public String getInfoText() {
+        return infoText;
+    }
+
+    public void setInfoText(String infoText) {
+        this.errorText="";
+        this.infoText = infoText;
+    }
+
+    public String getErrorText() {
+        return errorText;
+    }
+
+    public void setErrorText(String errorText) {
+        this.infoText="";
+        this.errorText = errorText;
+    }
    
    public void disconnect(){
        try {
@@ -451,7 +481,7 @@ public class IgrzyskaSingleton {
         }
    }
    
-   public void updateZawodnik(int id, String imie, String nazwisko, String zespol, int idTrenera, 
+   public boolean updateZawodnik(int id, String imie, String nazwisko, String zespol, int idTrenera, 
            String dyscyplina, String kraj, String data){
         Statement stmt = null;
         try {
@@ -461,7 +491,11 @@ public class IgrzyskaSingleton {
                     + ", dyscyplina = " + modTextNull(dyscyplina) + ", kraj = " + modTextNull(kraj) 
                     + ", data_ur = " + "to_date('" + data + "', 'dd-mm-yyyy')" ;
             stmt.executeUpdate("Update "+adm+"zawodnik set " + val + " where id_zaw = " + id);
+            setInfoText("Zaktualizowano zawodnika: " + imie + " " + nazwisko); 
+            getMainWindow().refreshView();
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
         } finally {
             if (stmt != null) {
@@ -469,6 +503,7 @@ public class IgrzyskaSingleton {
                     stmt.close();
                 } catch (SQLException e) { /* kod obsługi */ }
             }
+            return true;
         }
    }
    
@@ -477,7 +512,11 @@ public class IgrzyskaSingleton {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM kraj WHERE nazwa like '" + kraj + "'");
+            setInfoText("Usunięto kraj: " + kraj); 
+            getMainWindow().refreshView();
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
         } finally {
             if (stmt != null) {
@@ -493,7 +532,11 @@ public class IgrzyskaSingleton {
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM zawodnik WHERE id_zaw = "+ Integer.toString(id));
+            setInfoText("Usunięto zawodnika: " + id); 
+            getMainWindow().refreshView();
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
         } finally {
             if (stmt != null) {
@@ -504,18 +547,46 @@ public class IgrzyskaSingleton {
         }
    }
    
-      public void usunDyscypline(String nazwa){
+    public void usunZespol(int id){
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
-            stmt.executeUpdate("DELETE FROM dyscyplina WHERE nazwa like '"+ nazwa + "'");
+            stmt.executeUpdate("DELETE FROM zespół WHERE numer = "+ Integer.toString(id));
+            setInfoText("Usunięto zespół: " + id); 
+            getMainWindow().refreshView();
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+   }
+   
+   
+   
+      public void usunDyscypline(String nazwa){
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("DELETE FROM dyscyplina WHERE nazwa like '"+ nazwa + "'");
+            setInfoText("Usunięto dyscyplinę: " + nazwa); 
+            getMainWindow().refreshView();
+        } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
+            System.out.println("Bład wykonania polecenia" + ex.toString());
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) { 
+                    
+                }
             }
         }
    }
@@ -525,13 +596,16 @@ public class IgrzyskaSingleton {
             stmt = connection.createStatement();
             stmt.executeUpdate("DELETE FROM medal WHERE id_med =" + id);
             stmt.close();
+            setInfoText("Usunięto medal: " + id); 
+            getMainWindow().refreshView();
+            
    }
    
    private String modText(String s){
        return (s == null || "".equals(s))? "'%'" : "'"+s+"'";
    }
    private String modTextNull(String s){
-       return (s == null || "".equals(s))? null : "'"+s+"'";
+       return (s == null || "".equals(s))? null : "'"+s.replaceAll("[-+.^:,'\"*&^%$]","")+"'";
    }
 
     public FXMLDocumentController getMainWindow() {
@@ -577,7 +651,7 @@ public class IgrzyskaSingleton {
         return c;
    }
    
-    public void dodajMedal(String kolor, int id_zesp, int id_zaw, String dysc, String data){ 
+    public boolean dodajMedal(String kolor, int id_zesp, int id_zaw, String dysc, String data){ 
         System.out.println("Procedura dodawania medali zesp:" + id_zesp +" zaw:" +  id_zaw);
         try {
             CallableStatement stmt = connection.prepareCall("{call dodaj_medal(?,?,?,?,?)}");
@@ -594,33 +668,47 @@ public class IgrzyskaSingleton {
             stmt.setString(5, data);
             stmt.execute();
             stmt.close(); 
+            setInfoText("Dodano medal(e).");
+            getMainWindow().refreshView();
            
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
+        }finally{
+            return true;
         }   
     }
     
-        public void dodajZawodnikaProcedure(String imie, String nazwisko, String data_ur, int trener, String kraj,
+    public String noSpecChars(String s){
+        return s.replaceAll("[-+.^:,'\"*&^%$]","");
+    }
+        public boolean dodajZawodnikaProcedure(String imie, String nazwisko, String data_ur, int trener, String kraj,
                 String dyscyplina, String zespol, float ocena){
         try {
             CallableStatement stmt = connection.prepareCall("{call dodaj_zawodnik(?,?,?,?,?,?,?,?)}");
-            stmt.setString(1, imie);
-            stmt.setString(2, nazwisko);
+            stmt.setString(1, noSpecChars(imie));
+            stmt.setString(2, noSpecChars(nazwisko));
             stmt.setString(3, data_ur);
             if(trener>0)
                 stmt.setInt(4, trener);
             else 
                 stmt.setNull(4, trener);
-            stmt.setString(5, kraj);
-            stmt.setString(6, dyscyplina);
+            stmt.setString(5, noSpecChars(kraj));
+            stmt.setString(6, noSpecChars(dyscyplina));
             stmt.setString(7, zespol);
             stmt.setFloat(8, ocena);
             stmt.execute();
             stmt.close(); 
+            setInfoText("Dodano nowego zawodnika: " + imie + " " + nazwisko);
 
         } catch (SQLException ex) {
+            setErrorText("Bład: " + ex.getLocalizedMessage()); 
+            getMainWindow().refreshView();
             System.out.println("Bład wykonania polecenia" + ex.toString());
-        }   
+        }finally{
+            return true;
+        } 
     }
         
     public int getKrajScore(String kraj){
