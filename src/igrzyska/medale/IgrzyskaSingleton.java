@@ -605,7 +605,8 @@ public class IgrzyskaSingleton {
        return (s == null || "".equals(s))? "'%'" : "'"+s+"'";
    }
    private String modTextNull(String s){
-       return (s == null || "".equals(s))? null : "'"+s.replaceAll("[-+.^:,'\"*&^%$]","")+"'";
+       noSpecChars(s);
+       return (s == null || "".equals(s))? null : "'"+s;
    }
 
     public FXMLDocumentController getMainWindow() {
@@ -681,7 +682,12 @@ public class IgrzyskaSingleton {
     }
     
     public String noSpecChars(String s){
-        return s.replaceAll("[-+.^:,'\"*&^%$]","");
+        if(s!=null){
+            if(s.length()>20)
+                s = s.substring(0,20);
+            return s.replaceAll("[-+.^:,'\"*&^%$]","");
+        }
+        else return null;
     }
         public boolean dodajZawodnikaProcedure(String imie, String nazwisko, String data_ur, int trener, String kraj,
                 String dyscyplina, String zespol, float ocena){
